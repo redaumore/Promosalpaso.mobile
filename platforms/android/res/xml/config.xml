@@ -2,12 +2,14 @@
 <widget id="io.cordova.helloCordova" version="2.0.0" xmlns="http://www.w3.org/ns/widgets">
     <name>Hello Cordova</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Promos al Paso mobile, el buscador de promociones cercanas.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="soporte@promosalpaso.com" href="http://promosalpaso.com">
+        Promos al Paso Team
     </author>
     <content src="index.html" />
+    <preference name="orientation" value="landscape" />
+    <access origin="*" />
     <feature name="App">
         <param name="android-package" value="org.apache.cordova.App" />
     </feature>
@@ -67,9 +69,7 @@
     </feature>
     <plugins>
     </plugins>
-    <access origin="*" />
     <preference name="useBrowserHistory" value="true" />
     <preference name="exit-on-suspend" value="false" />
-    <preference name="fullscreen" value="true" />
-    <preference name="webviewbounce" value="true" />
+    <preference name="fullscreen" value="false" />
 </widget>
