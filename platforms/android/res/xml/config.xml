@@ -8,8 +8,6 @@
         Promos al Paso Team
     </author>
     <content src="index.html" />
-    <preference name="orientation" value="landscape" />
-    <access origin="*" />
     <feature name="App">
         <param name="android-package" value="org.apache.cordova.App" />
     </feature>
