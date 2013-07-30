@@ -45,8 +45,12 @@ function onSuccessPromoList(position) {
 		loadPromoList();
 	}
 	else{
-		console.log("Accuracy: "+position.coords.accuracy);
-		onError("");
+		if(environment == "DEV")
+			loadPromoList();
+		else{
+			console.log("Accuracy: "+position.coords.accuracy);
+			onError("");
+		}
 	}
 };
 
@@ -77,7 +81,7 @@ function onError(error) {
 		_lat = "-34.682919"; 
 		_lng = "-58.572397";
 		console.log("onError: SAN JUSTO");
-		loadPromoList();
+	//	loadPromoList();
 	}
 	else{
 		msg = 'No se pudo obtener tu localización. Te sugerimos buscar por ciudad.';
@@ -413,10 +417,10 @@ var liString = new String();
 	liString += '                     </td>';
 	liString += '                     <td style="border-right: solid 1px #9CAAC6;">';
 	liString += '                        <p class="comercio ui-li-desc">#COMERCIO#</p>';
-	liString += '                        <p class="descripcion ui-li-desc">#DESCRIPCION#</p>';
+	liString += '                        <div class="descripcion ui-li-desc">#DESCRIPCION#</div>';
 	liString += '                        <p class="promo ui-li-desc">#PROMO#</p>';
 	liString += '                     </td>';
-	liString += '                     <td style="width: 30px;">';
+	liString += '                     <td style="width: 45px;">';
 	liString += '                        <div style="text-align: center;">';
 	liString += '                            <div class="desde" style="display: #PRECIO_DESDE#;">desde</div>';
 	liString += '                            <div><span class="precio">#PRECIO#</span></div>';
@@ -689,7 +693,7 @@ function retrieveResponses(){
 }
 
 function gotoContact(){
-	retrieveResponses();
+	//retrieveResponses();
 	$.mobile.changePage(jQuery("#contact"));
 }
 

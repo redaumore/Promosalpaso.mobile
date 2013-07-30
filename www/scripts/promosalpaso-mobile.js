@@ -15,8 +15,8 @@ jQuery(document).ready(function(){
             setLastUpdate(new Date(0));
         console.log("Ultima actualización: "+_last_update);    
         console.log("Actualizando ciudades...");
-        getRegionsUpdate();
         jQuery.mobile.showPageLoadingMsg('a', "Buscando tu localización...", false);
+        getRegionsUpdate();
         getGeoLocation();
         
   });
@@ -64,7 +64,8 @@ function setLastUpdate(timestamp){
 }
 
 function gotoCategories(){
-	
+	event.preventDefault();
+    $.mobile.changePage(jQuery("#category"));
 }
 
 jQuery(document).on("click",'.go-back', function() {

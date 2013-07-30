@@ -24,7 +24,7 @@ body{ font-size: .5em; }
 .descripcion{
     font-size: 1em;
     padding-left: 4px;
-    width:100%;
+    width:98%;
     white-space:pre-wrap;
     font-family: Arial, Helvetica, sans-serif;
 }
