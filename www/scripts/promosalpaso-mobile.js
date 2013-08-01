@@ -17,7 +17,10 @@ jQuery(document).ready(function(){
         console.log("Actualizando ciudades...");
         jQuery.mobile.showPageLoadingMsg('a', "Buscando tu localización...", false);
         getRegionsUpdate();
+        console.log("Geolocalizando...");
         getGeoLocation();
+        console.log("Trayendo categorias...");
+        getCategories();
         
   });
 
@@ -27,13 +30,7 @@ jQuery(document).ready(function(){
         script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCKgb7PEB7WJtzazWBhDg5OwX09ybi2qh8&sensor=true";
         document.body.appendChild(script);
         directionsService = new google.maps.DirectionsService();*/
-/*
-jQuery.fn.center = function () {
-    this.css("position", "absolute");
-    this.css("top", (jQuery(window).height() - this.height()) / 2 + jQuery(window).scrollTop() + "px");
-    this.css("left", (jQuery(window).width() - this.width()) / 2 + jQuery(window).scrollLeft() + "px");
-    return this;
-}*/
+
 
 jQuery(document).on("change blur",'#state_select', function() {
     var selectedState = jQuery(this).val();
@@ -77,3 +74,26 @@ jQuery(document).on("click",'.go-main', function() {
     event.preventDefault();
     $.mobile.changePage(jQuery("#main"));
 });
+
+function getCategories(){
+	$.ajax({
+        url: _baseServUri + 'getcategories',
+        dataType: 'jsonp',
+        data: {"last_update": _last_update
+        	},
+        jsonp: 'jsoncallback',
+        contentType: "application/json; charset=utf-8",
+        timeout: 10000,
+        beforeSend: function (jqXHR, settings) {
+            console.log(settings.url);
+        },
+        success: function(data, status){
+        	if(data.length != 0)
+        		window.localStorage.setItem("categories", JSON.stringify(data));
+        	console.log(JSON.stringify(data))
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+        	console.log("Error recuperando las categorias.")
+        }
+    });
+}

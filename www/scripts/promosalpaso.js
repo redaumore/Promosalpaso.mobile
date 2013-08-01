@@ -8,7 +8,7 @@ var _lng;
 var _promo_lat;
 var _promo_lng;
 var _baseServUri = _baseUri + "services/";
-var _baseAjaxUri = _baseUri + "Backendajax/";
+var _baseAjaxUri = _baseUri + "backendajax/";
 var _activePromo;
 var _firstAttemp = true;
 var _firstAttempFav = true;
