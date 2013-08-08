@@ -20,7 +20,7 @@ jQuery(document).ready(function(){
         console.log("Geolocalizando...");
         getGeoLocation();
         console.log("Trayendo categorias...");
-        getCategories();
+        getCategories(false);
         
   });
 
@@ -62,11 +62,16 @@ function setLastUpdate(timestamp){
 
 function gotoCategories(){
 	event.preventDefault();
-    $.mobile.changePage(jQuery("#category"));
+	$.mobile.changePage(jQuery("#category"));
+	loadSelectedCategories();
 }
 
 jQuery(document).on("click",'.go-back', function() {
     event.preventDefault();
+    var thisPage = location.hash;
+    if(thisPage == "#category"){
+    	saveSelectedCategories();
+    }
     jQuery.mobile.back();
 });
 
@@ -75,7 +80,7 @@ jQuery(document).on("click",'.go-main', function() {
     $.mobile.changePage(jQuery("#main"));
 });
 
-function getCategories(){
+function getCategories(fromCategories){
 	$.ajax({
         url: _baseServUri + 'getcategories',
         dataType: 'jsonp',
@@ -91,9 +96,108 @@ function getCategories(){
         	if(data.length != 0)
         		window.localStorage.setItem("categories", JSON.stringify(data));
         	console.log(JSON.stringify(data))
+        	loadCategories();
         },
         error: function(jqXHR, textStatus, errorThrown){
         	console.log("Error recuperando las categorias.")
         }
     });
+}
+
+function loadCategories(){
+	categories = window.localStorage.getItem("categories");
+	if(categories == ""){
+		getCategories(true);
+		return;
+	}
+	objCategory = JSON.parse(categories);
+	jQuery("#category-container").empty();
+	jQuery.each(objCategory, function(index, father) {
+		$( "<div></div>", {
+			"id":"f-"+father.id,
+			"data-role":"collapsible",
+			"data-inset":"false",
+		}).appendTo("#category-container" );
+		$('<h3><span class="category-father">'+father.title+'</span><span id="counter-'+father.id+'" class="category-counter">0</span></h3>').appendTo("#f-"+father.id );
+		$('<ul id="ul-'+father.id+'" data-role="listview"></ul>').appendTo("#f-"+father.id );
+		var ulid = "ul-"+father.id;
+		jQuery.each(this.children, function(index, child){
+			$('<li style="padding:0px; border:0px; border-bottom: 1px solid #999999">'
+		        	+'<div class="ui-controlgroup-controls">'
+					+'<div class="ui-checkbox">'
+						+'<input type="checkbox" name="chbx-'+child.id+'" id="chbx-'+child.id+'" data-inset="false">'
+						+'<label for="chbx-'+child.id+'" class="ui-btn ui-btn-icon-left category-child">'
+						+child.title
+						+'</label>'
+					+'</div>'
+				+'</div>'
+			+'</li>').appendTo("#ul-"+String(child.id).substring(0, 3)+"0");
+		})
+		$('<li style="padding:0px; border:0px;">'
+	        	+'<div class="ui-controlgroup-controls">'
+				+'<div class="ui-checkbox">'
+					+'<input type="checkbox" name="chbx-'+father.id+'" id="chbx-'+father.id+'" data-inset="false">'
+					+'<label for="chbx-'+father.id+'" class="ui-btn ui-btn-icon-left category-child">Todos</label>'
+				+'</div>'
+			+'</div>'
+		+'</li>').appendTo("#ul-"+father.id);
+	});
+	
+	jQuery('span[id^="counter-"]').hide();
+	
+	jQuery('input[name^="chbx-"]').click( function(){
+		var id_father = String(this.id).substring(5, 8) + "0";
+		var counter = parseInt(jQuery("#counter-"+id_father).text());
+		
+		if($(this).is(':checked'))
+			counter = counter + 1;
+		else
+			counter = counter - 1;
+		
+		jQuery("#counter-"+id_father).text(counter);
+		
+		if(counter == 0)
+			jQuery("#counter-"+id_father).hide();
+		else
+			jQuery("#counter-"+id_father).show();
+		
+	});
+}
+
+function clearCategories(){
+	window.localStorage.setItem("selected_categories", "");
+	loadSelectedCategories();
+}
+
+function loadSelectedCategories(){
+	var selectedCategories = window.localStorage.getItem("selected_categories");
+	if(selectedCategories == ""){
+		jQuery('input[name^="chbx-"]').each(function(){
+			if($(this).is(':checked'))
+				$(this).click();
+				$(this).prop("checked",false);
+				$(this).checkboxradio("refresh");
+		});
+	}
+	else{
+		var cats = selectedCategories.split(",");
+		jQuery.each(cats, function(){
+			var checkbox = $("#chbx-"+this.toString());
+			checkbox.click();
+			checkbox.prop("checked",true);
+			checkbox.checkboxradio("refresh");
+		});
+	}
+}
+
+function saveSelectedCategories(){
+	var cats = new Array();
+	var strcat = "";
+	jQuery('input[name^="chbx-"]').each(function(){
+		if($(this).is(':checked')){
+			strcat = $(this).attr("name");
+			cats.push(strcat.substring(5));
+		}
+	});
+	window.localStorage.setItem("selected_categories", cats.toString());
 }

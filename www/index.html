@@ -9,7 +9,7 @@
 <script src="scripts/jquery-1.10.1.min.js"></script>
 <script src="scripts/jquery.mobile-1.3.1.min.js"></script>
 <!-- <script src="scripts/cordova.js"></script> --> 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKgb7PEB7WJtzazWBhDg5OwX09ybi2qh8&sensor=true" type="text/javascript"></script>
+<!--  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKgb7PEB7WJtzazWBhDg5OwX09ybi2qh8&sensor=true" type="text/javascript"></script>-->
 <script src="scripts/route-maps.js"></script>
 <script src="scripts/promosalpaso.js"></script>
 <script src="scripts/promosalpaso-mobile.js"></script>
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div data-role="page" id="detail">
+    <div data-role="page" id="detail" data-theme="a">
         <div id="headerdetail" data-role="header" class="ui-header ui-header-fixed" data-position="fixed">
             <div style="height: 5em;">
                 <div style="float: left; padding-top: 0.5em; padding-left: 0.5em;">
@@ -224,12 +224,11 @@
             </div>
         </div>
         <div data-role="content" class="scrollable">
-        <h2>Filtro de Categorías</h2>
-        <span style="width:100%; padding:5px; font-size: 1.2em;">Selecciona las categorías que desees ver. Solo te mostraremos las promos relacionadas a las mismas.</span>
-        
+        	<h2>Filtro de Categorías</h2>
+	        <span style="width:100%; margin:5px; padding:5px; font-size: 1.2em;">Las categorías seleccionadas se tienen en cuenta en todas las búsquedas.</span>
+	        <a type="button" onClick="clearCategories();" class="btn" data-mini="true" data-icon="trash" data-iconpos="right">Limpiar categorias seleccionadas</a>
+	       	<div id="category-container" style="margin-top: 5px;"></div>
         </div>
     </div>
-
-	
 </body>
 </HTML>

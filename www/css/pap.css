@@ -2,6 +2,31 @@ html{ font-size: 125%; }
 
 body{ font-size: .5em; }
 
+/*CATEGORIAS*/
+ .category-counter{
+ 	float: right; 
+ 	font-size:0.75em; 
+ 	border: 1px solid #ccc; 
+ 	background: #eee; 
+ 	-webkit-border-radius: 1em; 
+ 	border-radius: 1em; 
+ 	padding: .2em .5em;
+ }
+ 
+ .category-father{
+ 	width: 85%; 
+ 	display: inline-block;
+ }
+ 
+ .category-child{
+ 	-webkit-border-radius:0; 
+ 	border:0px; 
+ 	margin:0px; 
+ 	margin-botton:1px;
+ }
+
+/*FIN CATEGORIAS*/
+
 .registro{
     padding: 0px;
 }
