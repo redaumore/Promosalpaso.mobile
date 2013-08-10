@@ -124,21 +124,21 @@ function loadCategories(){
 		jQuery.each(this.children, function(index, child){
 			$('<li style="padding:0px; border:0px; border-bottom: 1px solid #999999">'
 		        	+'<div class="ui-controlgroup-controls">'
-					+'<div class="ui-checkbox">'
+					//+'<div class="ui-checkbox">'
 						+'<input type="checkbox" name="chbx-'+child.id+'" id="chbx-'+child.id+'" data-inset="false">'
 						+'<label for="chbx-'+child.id+'" class="ui-btn ui-btn-icon-left category-child">'
 						+child.title
 						+'</label>'
-					+'</div>'
+					//+'</div>'
 				+'</div>'
 			+'</li>').appendTo("#ul-"+String(child.id).substring(0, 3)+"0");
 		})
 		$('<li style="padding:0px; border:0px;">'
 	        	+'<div class="ui-controlgroup-controls">'
-				+'<div class="ui-checkbox">'
+				// +'<div class="ui-checkbox">'
 					+'<input type="checkbox" name="chbx-'+father.id+'" id="chbx-'+father.id+'" data-inset="false">'
 					+'<label for="chbx-'+father.id+'" class="ui-btn ui-btn-icon-left category-child">Todos</label>'
-				+'</div>'
+				// +'</div>'
 			+'</div>'
 		+'</li>').appendTo("#ul-"+father.id);
 	});
@@ -154,6 +154,8 @@ function loadCategories(){
 		else
 			counter = counter - 1;
 		
+		if(counter<0)
+			counter = 0;
 		jQuery("#counter-"+id_father).text(counter);
 		
 		if(counter == 0)
@@ -174,19 +176,30 @@ function loadSelectedCategories(){
 	if(selectedCategories == ""){
 		jQuery('input[name^="chbx-"]').each(function(){
 			if($(this).is(':checked'))
-				$(this).click();
 				$(this).prop("checked",false);
 				$(this).checkboxradio("refresh");
 		});
+		jQuery("[class=category-counter]").text("0");
+		jQuery("[class=category-counter]").hide();
 	}
 	else{
 		var cats = selectedCategories.split(",");
+		var id_father; 
+		var counter;
+		jQuery("[class=category-counter]").text("0");
 		jQuery.each(cats, function(){
 			var checkbox = $("#chbx-"+this.toString());
-			checkbox.click();
 			checkbox.prop("checked",true);
+			
+			id_father = String(this.toString()).substring(0,3) + "0";
+			counter = parseInt(jQuery("#counter-"+id_father).text());
+			counter = counter + 1;
+			jQuery("#counter-"+id_father).text(counter);
+			jQuery("#counter-"+id_father).show();
+			
 			checkbox.checkboxradio("refresh");
 		});
+		
 	}
 }
 

@@ -9,7 +9,7 @@
 <script src="scripts/jquery-1.10.1.min.js"></script>
 <script src="scripts/jquery.mobile-1.3.1.min.js"></script>
 <!-- <script src="scripts/cordova.js"></script> --> 
-<!--  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKgb7PEB7WJtzazWBhDg5OwX09ybi2qh8&sensor=true" type="text/javascript"></script>-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKgb7PEB7WJtzazWBhDg5OwX09ybi2qh8&sensor=true" type="text/javascript"></script>
 <script src="scripts/route-maps.js"></script>
 <script src="scripts/promosalpaso.js"></script>
 <script src="scripts/promosalpaso-mobile.js"></script>
@@ -68,42 +68,45 @@
             	<div style="float: right; padding-top: 0.5em; padding-right: 0.5em;"><img src="images/logo-promosalpaso70.png" style="height: 4em;" class="go-main"/></div>
             </div>
         </div>
-        <div data-role="content" style="padding: 0px;" class="scrollable">
-        	<div style="border-bottom: solid 1px #9CAAC6; width: 100%;" class="table-row">
+        <div data-role="content" style="padding: 0px;" class="scrollable det-font-oscuro">
+        	<div class="table-row det-comercio-row">
                 <div style="float: left;" class="table-cell">
-                	<img id="det-img-comercio" src="images/trebol.png" style="width: 3.8em; height: 3.8em; padding: 3px;"/>
+                	<img id="det-img-comercio" src="images/trebol.png"/>
                 </div>
                 <div class="table-cell">
                 	<div id="det-name" class="det-comercio">Nombre Comercio</div>
-                	<div id="det-direccion" class="comercio">Av de Mayo 25448 - Ramos Mejía</div>
+                	<div id="det-direccion" class="comercio det-font-oscuro">Av de Mayo 25448 - Ramos Mejía</div>
                 </div>
+                <hr/>
             </div>
-            <div id="det-long_description" class="descripcion" style="font-size: 1.2em; padding: 0.5em;">Descripcion larga</div>
-            <div id="det-displayed_text" class="det-comercio" style="width: 100%; background-color: #E6E6E6; color:gray; padding: 0.15em">2X1 de Lunes a Viernes</div>
-            <div style="width: 100%; min-height: 75px;">
-                <div style="float: left; width: 66px; padding-top: 3px;">
+            <div id="det-long_description" class="det-descripcion det-font-gris">Descripcion larga</div>
+            <div id="det-displayed_text" class="det-displayed-text fondo-gris">2X1 de Lunes a Viernes</div>
+            <div class="det-precio-row">
+                <div style="float: left; width: 66px; padding: 5px 0 5px 5px;">
                 	<a onClick="showPromoImage();" rel="external" class="ui-button" style="text-decoration: none; color: black; font-weight: bold;">
                     	<img id="det-img-promo" src="images/trebol.png" class="shadow image" style="padding: 3px; width: 60px; height: 60px;"/>
                     </a>
                 </div>
                 <div id="det-alarma" style="background-image: url(images/alert-icon.png); background-repeat: no-repeat; background-position: center center; float: right; height: 100%; min-height: 70px; width: 60px;">
-                    <div id="det-alarm_num" style="padding-top: 20px; font-size: 1.3em; color: white; text-align: center; height: 15px;">29</div>
-                    <div id="det-alarm_type" style="font-size: 1em; color: white; text-align: center; height: 18px; vertical-align: top;">unid.</div>
+                    <div id="det-alarm_num" class="det-alarm-num">29</div>
+                    <div id="det-alarm_type" class="det-alarm-type">unid.</div>
                 </div>
                 <div id="det-precio">
-                    <div id="det-short_description" class="comercio" style="padding-left: 72px;">Torta de Frutillas</div>
-                    <div id="precio_desde" class="desde-det">desde</div>
-                    <div id="det-promo_value" class="precio" style="font-size: 2.5em;">2390</div>
+                    <div id="det-short_description" class="comercio det-font-oscuro" style="padding: 0 5px 0 78px;">Torta de Frutillas</div>
+                    <div style="text-align: center;">
+                    	<div id="precio_desde" class="det-desde">desde</div>
+                    	<div id="det-promo_value" class="precio" style="font-size: 2.5em;">2390</div>
+                    </div>
                 </div>
             </div>
-            <div style="background-color: #E6E6E6;">
+            <div class="fondo-gris">
                 <div style="height: 65px; float: left; border-right: solid 1px #9CAAC6;">
                     <a href="#page-map" rel="external" class="ui-button" style="text-decoration: none; color: black; font-weight: bold;" data-ajax="false">
-                        <div style="float: left; padding-top: 3px;">
+                        <div style="float: left; padding: 5px 0 5px 5px;">
                             <img id="det-img-mapa" src="images/map-icon.png" class="shadow image" style="padding: 3px; width: 60px; height: 60px; background-color: white;">
                         </div>
-                        <div style="font-size: 1em; margin-left: 75px; width:60px; text-align: center; padding: 2em 0 0.8em 0;">VER MAPA</div>
-                        <div id="det-distance" class="det-distancia" style="font-size: 1.5em;  margin-left: 75px; width:60px; text-align: center; padding-bottom: 1em;">200 mts</div>
+                        <div class="det-ver-mapa det-font-oscuro">VER MAPA</div>
+                        <div id="det-distance" class="det-distancia det-font-oscuro">200 mts</div>
                     </a>
                 </div>
                 <div style="float: right; padding: 3px 3px 0 0;">

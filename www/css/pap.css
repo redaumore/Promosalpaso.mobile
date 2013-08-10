@@ -37,44 +37,114 @@ body{ font-size: .5em; }
     padding-left: 4px;
     padding-top: 4px;
     text-align: center;
-    font-size: 1.2em;
+    font-size: 1.3em;
     font-family: "Trebuchet MS", Helvetica, sans-serif;
     white-space:pre-wrap;
+    color: #FF6A15;
+    text-shadow: 0 0 1px #FF6A15 ;
 }
+
+.det-font-oscuro{
+	color: #666666;
+	text-shadow: 0 0 1px #666666;
+}
+
+.fondo-gris{
+	background-color: #E0E0E0; 
+}
+
+.det-comercio{
+    color: #FF6A15;
+    font-weight: bolder;
+    text-align: center;
+    vertical-align: middle;
+    white-space:pre-wrap;
+    font-size: 1.7em;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-shadow: 0 0 1px #FF6A15, 0 0 1px #FF6A15 ;
+}
+
+.det-comercio-row{
+	background-color: #FFFFFF;
+	padding: 5px 5px 1px 5px;
+}
+
+.det-img-comercio{
+	width: 4em; 
+	padding: 5px;
+}
+
+.det-descripcion{
+	background-color: #FFFFFF;
+	font-size: 1.3em;
+    font-weight: bold;
+    padding: 8px 8px 13px 8px;
+    white-space:pre-wrap;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.det-displayed-text{
+	font-weight: bolder;
+    text-align: center;
+    vertical-align: middle;
+    white-space:pre-wrap;
+    font-size: 1.7em;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-shadow: 0 0 1px #FF6A15;
+    width: 100%; 
+    padding: 0.15em	
+}
+
 .aviso{
     font-size: 0.7em;
     color: #2F3E46;
     width: 100%;
 }
+
 .descripcion{
+	background-color: #FFFFFF;
     font-size: 1em;
     padding-left: 4px;
     width:98%;
     white-space:pre-wrap;
     font-family: Arial, Helvetica, sans-serif;
 }
-.promo{
-    color: #F38000;
+
+.det-precio-row{
+	width: 100%;
+	min-height: 75px;
+	background-color: #FFFFFF;
+	padding: 13px 0 13px 0;
+}
+
+.lst-promo{
+    color: #42962F;
     font-weight: bolder;
     padding-left: 4px;
     text-align: center;
     vertical-align: middle;
     white-space:pre-wrap;
-    font-size: 1em;
+    font-size: 1.2em;
     font-family: Tahoma, Geneva, sans-serif;
+    text-shadow: 0 0 1px #42962F;
 }
+
 .precio{
-    font-size: 1.25em;
+    font-size: 1.7em;
     font-weight: bold;
     color: #FF6A15;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     vertical-align: middle;
+    display: inline;
+    text-shadow: 0 0 1px #FF6A15;
 }
+
 .precio:before{
     content: "$";
     font-size: 0.7em; 
 }
+
 .desde{
     font-size: 0.9em;
     font-weight: bold;
@@ -86,30 +156,79 @@ body{ font-size: .5em; }
     width: 40px;
     /*position: absolute;*/
 }
-.desde-det{
+
+.det-desde{
     font-size: 1.5em;
     font-weight: bold;
     color: #FF6A15;
     font-family: Arial, Helvetica, sans-serif;
     vertical-align: middle;
     text-align: center;
+    display: inline;
+    text-shadow: 0 0 1px #FF6A15;
 }
+
+.det-alarm-num{
+	padding-top: 20px; 
+	font-size: 1.6em; 
+	color: white;
+	font-weight: bold; 
+	text-align: center; 
+	height: 15px;
+	text-shadow: 0 0 1px #FFFFFF;
+}
+
+.det-alarm-type{
+	font-size: 1em; 
+	color: white;
+	font-weight: bold; 
+	text-align: center; 
+	height: 18px; 
+	vertical-align: top;
+	text-shadow: 0 0 1px #FFFFFF;	
+}
+
 .distancia{
     font-size: 0.9em;
     text-align: center;
     vertical-align: middle;    
 }
+
 .distancia:after{
     content: " mts";    
 }
+
 .det-distancia{
-    font-size: 0.9em;
     text-align: center;
-    vertical-align: middle;    
+    vertical-align: middle;
+    font-size: 1.5em;  
+    margin-left: 75px; 
+    width:60px; 
+    text-align: center; 
+    padding-bottom: 1em;    
 }
+
 .det-distancia:after{
     font-size: 0.6em;
-    content: " mts(*)";    
+    content: " mts";    
+}
+
+.det-favoritos{
+	text-align: left;
+	font-size: 1.4em;
+	font-weight: bold;
+	color: #42962F;
+	text-shadow: 0 0 1px #42962F;
+	
+}
+
+.det-ver-mapa{
+	font-size: 1em; 
+	font-weight: bold;
+	margin-left: 75px; 
+	width:65px; 
+	text-align: center; 
+	padding: 2em 0 0.8em 0;
 }
 
 div>sup{
@@ -129,24 +248,14 @@ span>sup{
     /* For IE 5.5 - 7 */
     filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#000000');
 }
-.image{
-    width: 4em;
+.lst-image{
+    width: 6em;
 }
 .arrow-r{
     background-image: url(images/arrow.png);
     background-repeat: no-repeat;
     background-position:center;
     width: 6px;
-}
-
-.det-comercio{
-    color: #FF6A15;
-    font-weight: bolder;
-    text-align: center;
-    vertical-align: middle;
-    white-space:pre-wrap;
-    font-size: 1.7em;
-    font-family: Tahoma, Geneva, sans-serif;
 }
 
 .scrollable {
@@ -476,7 +585,7 @@ span>sup{
 }
 
 .icon-trash {
-  background-position: -456px 0;
+  background-position: -849px 0;
 }
 
 .icon-home {
