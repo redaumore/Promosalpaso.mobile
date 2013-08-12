@@ -81,10 +81,18 @@ jQuery(document).on("click",'.go-main', function() {
 });
 
 function getCategories(fromCategories){
+	var cats = window.localStorage.getItem("categories");
+	var local_last_update = _last_update;
+	if(cats == null){
+		localDate = new Date(0);
+		local_last_update = localDate.toISOString();
+		local_last_update = local_last_update.replace("T"," ");
+		local_last_update = local_last_update.replace("Z","");
+	}
 	$.ajax({
         url: _baseServUri + 'getcategories',
         dataType: 'jsonp',
-        data: {"last_update": _last_update
+        data: {"last_update": local_last_update
         	},
         jsonp: 'jsoncallback',
         contentType: "application/json; charset=utf-8",
@@ -93,10 +101,21 @@ function getCategories(fromCategories){
             console.log(settings.url);
         },
         success: function(data, status){
-        	if(data.length != 0)
-        		window.localStorage.setItem("categories", JSON.stringify(data));
+        	if(data.length != undefined){
+        		if(data.length != 0){
+        			window.localStorage.setItem("categories", JSON.stringify(data));
+        			loadCategories();
+        		}
+        		else{
+        			console.log("Servicio de categorias trajo array vacio.");
+        			window.localStorage.removeItem("categories");
+        		}
+        	}
+        	else{
+        		console.log(data.code + ": " + data.message);
+        		window.localStorage.removeItem("categories");
+        	}
         	console.log(JSON.stringify(data))
-        	loadCategories();
         },
         error: function(jqXHR, textStatus, errorThrown){
         	console.log("Error recuperando las categorias.")
@@ -105,9 +124,9 @@ function getCategories(fromCategories){
 }
 
 function loadCategories(){
-	categories = window.localStorage.getItem("categories");
-	if(categories == ""){
-		getCategories(true);
+	var categories = window.localStorage.getItem("categories");
+	if(categories == null){
+		//getCategories(true);
 		return;
 	}
 	objCategory = JSON.parse(categories);
@@ -124,21 +143,17 @@ function loadCategories(){
 		jQuery.each(this.children, function(index, child){
 			$('<li style="padding:0px; border:0px; border-bottom: 1px solid #999999">'
 		        	+'<div class="ui-controlgroup-controls">'
-					//+'<div class="ui-checkbox">'
 						+'<input type="checkbox" name="chbx-'+child.id+'" id="chbx-'+child.id+'" data-inset="false">'
 						+'<label for="chbx-'+child.id+'" class="ui-btn ui-btn-icon-left category-child">'
 						+child.title
 						+'</label>'
-					//+'</div>'
 				+'</div>'
 			+'</li>').appendTo("#ul-"+String(child.id).substring(0, 3)+"0");
 		})
 		$('<li style="padding:0px; border:0px;">'
 	        	+'<div class="ui-controlgroup-controls">'
-				// +'<div class="ui-checkbox">'
 					+'<input type="checkbox" name="chbx-'+father.id+'" id="chbx-'+father.id+'" data-inset="false">'
 					+'<label for="chbx-'+father.id+'" class="ui-btn ui-btn-icon-left category-child">Todos</label>'
-				// +'</div>'
 			+'</div>'
 		+'</li>').appendTo("#ul-"+father.id);
 	});
@@ -167,13 +182,13 @@ function loadCategories(){
 }
 
 function clearCategories(){
-	window.localStorage.setItem("selected_categories", "");
+	window.localStorage.removeItem("selected_categories");
 	loadSelectedCategories();
 }
 
 function loadSelectedCategories(){
 	var selectedCategories = window.localStorage.getItem("selected_categories");
-	if(selectedCategories == ""){
+	if(selectedCategories == null){
 		jQuery('input[name^="chbx-"]').each(function(){
 			if($(this).is(':checked'))
 				$(this).prop("checked",false);
