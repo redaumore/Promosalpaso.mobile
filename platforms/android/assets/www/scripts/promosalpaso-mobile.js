@@ -15,9 +15,12 @@ jQuery(document).ready(function(){
             setLastUpdate(new Date(0));
         console.log("Ultima actualización: "+_last_update);    
         console.log("Actualizando ciudades...");
-        getRegionsUpdate();
         jQuery.mobile.showPageLoadingMsg('a', "Buscando tu localización...", false);
+        getRegionsUpdate();
+        console.log("Geolocalizando...");
         getGeoLocation();
+        console.log("Trayendo categorias...");
+        getCategories(false);
         
   });
 
@@ -27,13 +30,7 @@ jQuery(document).ready(function(){
         script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCKgb7PEB7WJtzazWBhDg5OwX09ybi2qh8&sensor=true";
         document.body.appendChild(script);
         directionsService = new google.maps.DirectionsService();*/
-/*
-jQuery.fn.center = function () {
-    this.css("position", "absolute");
-    this.css("top", (jQuery(window).height() - this.height()) / 2 + jQuery(window).scrollTop() + "px");
-    this.css("left", (jQuery(window).width() - this.width()) / 2 + jQuery(window).scrollLeft() + "px");
-    return this;
-}*/
+
 
 jQuery(document).on("change blur",'#state_select', function() {
     var selectedState = jQuery(this).val();
@@ -64,11 +61,17 @@ function setLastUpdate(timestamp){
 }
 
 function gotoCategories(){
-	
+	event.preventDefault();
+	$.mobile.changePage(jQuery("#category"));
+	loadSelectedCategories();
 }
 
 jQuery(document).on("click",'.go-back', function() {
     event.preventDefault();
+    var thisPage = location.hash;
+    if(thisPage == "#category"){
+    	saveSelectedCategories();
+    }
     jQuery.mobile.back();
 });
 
@@ -76,3 +79,153 @@ jQuery(document).on("click",'.go-main', function() {
     event.preventDefault();
     $.mobile.changePage(jQuery("#main"));
 });
+
+function getCategories(fromCategories){
+	var cats = window.localStorage.getItem("categories");
+	var local_last_update = _last_update;
+	if(cats == null){
+		localDate = new Date(0);
+		local_last_update = localDate.toISOString();
+		local_last_update = local_last_update.replace("T"," ");
+		local_last_update = local_last_update.replace("Z","");
+	}
+	$.ajax({
+        url: _baseServUri + 'getcategories',
+        dataType: 'jsonp',
+        data: {"last_update": local_last_update
+        	},
+        jsonp: 'jsoncallback',
+        contentType: "application/json; charset=utf-8",
+        timeout: 10000,
+        beforeSend: function (jqXHR, settings) {
+            console.log(settings.url);
+        },
+        success: function(data, status){
+        	if(data.length != undefined){
+        		if(data.length != 0){
+        			window.localStorage.setItem("categories", JSON.stringify(data));
+        			loadCategories();
+        		}
+        		else{
+        			console.log("Servicio de categorias trajo array vacio.");
+        			window.localStorage.removeItem("categories");
+        		}
+        	}
+        	else{
+        		console.log(data.code + ": " + data.message);
+        		window.localStorage.removeItem("categories");
+        	}
+        	console.log(JSON.stringify(data))
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+        	console.log("Error recuperando las categorias.")
+        }
+    });
+}
+
+function loadCategories(){
+	var categories = window.localStorage.getItem("categories");
+	if(categories == null){
+		//getCategories(true);
+		return;
+	}
+	objCategory = JSON.parse(categories);
+	jQuery("#category-container").empty();
+	jQuery.each(objCategory, function(index, father) {
+		$( "<div></div>", {
+			"id":"f-"+father.id,
+			"data-role":"collapsible",
+			"data-inset":"false",
+		}).appendTo("#category-container" );
+		$('<h3><span class="category-father">'+father.title+'</span><span id="counter-'+father.id+'" class="category-counter">0</span></h3>').appendTo("#f-"+father.id );
+		$('<ul id="ul-'+father.id+'" data-role="listview"></ul>').appendTo("#f-"+father.id );
+		var ulid = "ul-"+father.id;
+		jQuery.each(this.children, function(index, child){
+			$('<li style="padding:0px; border:0px; border-bottom: 1px solid #999999">'
+		        	+'<div class="ui-controlgroup-controls">'
+						+'<input type="checkbox" name="chbx-'+child.id+'" id="chbx-'+child.id+'" data-inset="false">'
+						+'<label for="chbx-'+child.id+'" class="ui-btn ui-btn-icon-left category-child">'
+						+child.title
+						+'</label>'
+				+'</div>'
+			+'</li>').appendTo("#ul-"+String(child.id).substring(0, 3)+"0");
+		})
+		$('<li style="padding:0px; border:0px;">'
+	        	+'<div class="ui-controlgroup-controls">'
+					+'<input type="checkbox" name="chbx-'+father.id+'" id="chbx-'+father.id+'" data-inset="false">'
+					+'<label for="chbx-'+father.id+'" class="ui-btn ui-btn-icon-left category-child">Todos</label>'
+			+'</div>'
+		+'</li>').appendTo("#ul-"+father.id);
+	});
+	
+	jQuery('span[id^="counter-"]').hide();
+	
+	jQuery('input[name^="chbx-"]').click( function(){
+		var id_father = String(this.id).substring(5, 8) + "0";
+		var counter = parseInt(jQuery("#counter-"+id_father).text());
+		
+		if($(this).is(':checked'))
+			counter = counter + 1;
+		else
+			counter = counter - 1;
+		
+		if(counter<0)
+			counter = 0;
+		jQuery("#counter-"+id_father).text(counter);
+		
+		if(counter == 0)
+			jQuery("#counter-"+id_father).hide();
+		else
+			jQuery("#counter-"+id_father).show();
+		
+	});
+}
+
+function clearCategories(){
+	window.localStorage.removeItem("selected_categories");
+	loadSelectedCategories();
+}
+
+function loadSelectedCategories(){
+	var selectedCategories = window.localStorage.getItem("selected_categories");
+	if(selectedCategories == null){
+		jQuery('input[name^="chbx-"]').each(function(){
+			if($(this).is(':checked'))
+				$(this).prop("checked",false);
+				$(this).checkboxradio("refresh");
+		});
+		jQuery("[class=category-counter]").text("0");
+		jQuery("[class=category-counter]").hide();
+	}
+	else{
+		var cats = selectedCategories.split(",");
+		var id_father; 
+		var counter;
+		jQuery("[class=category-counter]").text("0");
+		jQuery.each(cats, function(){
+			var checkbox = $("#chbx-"+this.toString());
+			checkbox.prop("checked",true);
+			
+			id_father = String(this.toString()).substring(0,3) + "0";
+			counter = parseInt(jQuery("#counter-"+id_father).text());
+			counter = counter + 1;
+			jQuery("#counter-"+id_father).text(counter);
+			jQuery("#counter-"+id_father).show();
+			
+			checkbox.checkboxradio("refresh");
+		});
+		
+	}
+}
+
+function saveSelectedCategories(){
+	var cats = new Array();
+	var strcat = "";
+	jQuery('input[name^="chbx-"]').each(function(){
+		if($(this).is(':checked')){
+			strcat = $(this).attr("name");
+			cats.push(strcat.substring(5));
+		}
+	});
+	window.localStorage.setItem("selected_categories", cats.toString());
+}
