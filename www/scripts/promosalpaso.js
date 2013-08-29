@@ -15,6 +15,7 @@ var _firstAttempFav = true;
 var _inFavorites = false;
 var _last_update;
 var _searchOrigin = "GPS"; /*CITY, FAV*/
+var _current_page = -1;
 
 function refreshPromoList(){
 	_searchOrigin = "GPS"
@@ -38,7 +39,7 @@ function refreshPromoList(){
 }
 
 function onSuccessPromoList(position) {
-	if(position.coords.accuracy < 150){
+	if(position.coords.accuracy <= 150){
 		_lat = position.coords.latitude;
 		_lng = position.coords.longitude;
 		console.log("Geoposition: "+_lat+", "+_lng+" +/- "+position.coords.accuracy);
@@ -61,7 +62,7 @@ function getGeoLocation(){
 }
 
 function onSuccess(position){
-	if(position.coords.accuracy < 150){
+	if(position.coords.accuracy <= 150){
 		_lat = position.coords.latitude;
 		_lng = position.coords.longitude;
 		console.log("Geoposition: "+_lat+", "+_lng+" +/- "+position.coords.accuracy);
@@ -90,12 +91,16 @@ function onError(error) {
 }
 
 function loadPromoList(){
+	var uuid;
+	uuid = getuuid();
     $.ajax({
         url: _baseServUri + 'getpromolist',
         dataType: 'jsonp',
         data: {"lat": _lat,
                "lng": _lng, 
-               "cat": window.localStorage.getItem("selected_categories")},
+               "cat": window.localStorage.getItem("selected_categories"),
+               "mobile_uuid": uuid,
+               "page": _current_page + 1},
         jsonp: 'jsoncallback',
         contentType: "application/json; charset=utf-8",
         timeout: 10000,
