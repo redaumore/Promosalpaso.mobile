@@ -1074,3 +1074,21 @@ span>sup{
 /*ul li:nth-child(odd) { background-color:#eee; }*/
 ul li:nth-child(even) { background-color:#fff; }
 
+/***********************LAZYLOADING PROMOLIST*/
+.width-hundred-percent {
+    width:100% !important;
+}
+.display-none {
+    display:none;
+}
+.width-two-hundred-pixels {
+    width:200px;
+}
+.center-element {
+    margin-right: auto; 
+    margin-left: auto;
+}
+.align-center {
+    text-align: center;
+}
+/*END******************LAZYLOADING PROMOLIST*/

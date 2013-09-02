@@ -21,15 +21,9 @@ jQuery(document).ready(function(){
         getGeoLocation();
         console.log("Trayendo categorias...");
         getCategories(false);
+        initializeLazyLoader();
         
   });
-
-    /*}*/
-        /*var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCKgb7PEB7WJtzazWBhDg5OwX09ybi2qh8&sensor=true";
-        document.body.appendChild(script);
-        directionsService = new google.maps.DirectionsService();*/
 
 
 jQuery(document).on("change blur",'#state_select', function() {
@@ -103,22 +97,23 @@ function getCategories(fromCategories){
         success: function(data, status){
         	if(data.length != undefined){
         		if(data.length != 0){
-        			window.localStorage.setItem("categories", JSON.stringify(data));
-        			loadCategories();
+        			var jsondata = JSON.stringify(data);
+        			window.localStorage.setItem("categories", jsondata);
+        			jQuery("#cat").val(jsondata);
         		}
-        		else{
+        		else
         			console.log("Servicio de categorias trajo array vacio.");
-        			window.localStorage.removeItem("categories");
-        		}
+        		loadCategories();
         	}
         	else{
         		console.log(data.code + ": " + data.message);
         		window.localStorage.removeItem("categories");
+        		jQuery("#cat").val("");
         	}
-        	console.log(JSON.stringify(data))
+        	console.log(JSON.stringify(data));
         },
         error: function(jqXHR, textStatus, errorThrown){
-        	console.log("Error recuperando las categorias.")
+        	console.log("Error recuperando las categorias.");
         }
     });
 }
@@ -139,7 +134,6 @@ function loadCategories(){
 		}).appendTo("#category-container" );
 		$('<h3><span class="category-father">'+father.title+'</span><span id="counter-'+father.id+'" class="category-counter">0</span></h3>').appendTo("#f-"+father.id );
 		$('<ul id="ul-'+father.id+'" data-role="listview"></ul>').appendTo("#f-"+father.id );
-		var ulid = "ul-"+father.id;
 		jQuery.each(this.children, function(index, child){
 			$('<li style="padding:0px; border:0px; border-bottom: 1px solid #999999">'
 		        	+'<div class="ui-controlgroup-controls">'
@@ -149,7 +143,7 @@ function loadCategories(){
 						+'</label>'
 				+'</div>'
 			+'</li>').appendTo("#ul-"+String(child.id).substring(0, 3)+"0");
-		})
+		});
 		$('<li style="padding:0px; border:0px;">'
 	        	+'<div class="ui-controlgroup-controls">'
 					+'<input type="checkbox" name="chbx-'+father.id+'" id="chbx-'+father.id+'" data-inset="false">'
@@ -229,3 +223,79 @@ function saveSelectedCategories(){
 	});
 	window.localStorage.setItem("selected_categories", cats.toString());
 }
+
+function initializeLazyLoader(){
+	 // Initialize the lazyloader widget
+   $("#one").lazyloader();
+
+   /* Set some default options for the lazyloader
+    *   the first three set the timeout value for when the widget should check
+    *   the current scroll position relative to page height to decide whether
+    *   or not to load more yet.  The showprogress option is to specify the
+    *   duration of the fadeIn animation for the lazyloaderProgressDiv.
+    */
+   $.mobile.lazyloader.prototype.timeoutOptions.mousewheel = 300;
+   $.mobile.lazyloader.prototype.timeoutOptions.scrollstart = 700;
+   $.mobile.lazyloader.prototype.timeoutOptions.scrollstop = 100;
+   $.mobile.lazyloader.prototype.timeoutOptions.showprogress = 500;
+   
+   jQuery("#mobile_uuid").val(getuuid());
+}
+
+/*$('#one').on('pagebeforeshow', function(event) {
+* 
+*/
+function setupLazyLoad(){
+   /* Reset the lazy loader instance for the albums page
+    *   This resets the widget instance variables for the albums page    
+    *   This is done here because the artists page is one level up
+    *   from the albums page, so it needs to be reset in case the user
+    *   selects a different artist who will have their own albums that
+    *   will need to be lazy loaded
+    *   
+    *   Note: in this example, "reset" is the function and "albums" is
+    *      the pageId of the albums page 
+    */
+   //$( "#one" ).lazyloader( "reset", "albums" );
+
+   // Use an automatic threshold that's a function of the height of the viewport
+   threshold = 420; //$( window ).height() * 2;
+
+   // Set up the variable options to pass to the lazyloader reinitialize function
+   var options = {   "threshold"   : threshold,
+                     "retrieve"    : 7,
+                     "retrieved"   : 7,
+                     "bubbles"     : true,
+                     "offset"      : 0 };
+
+   // Set up the page specific settings to pass to the lazyloader reinitialize function
+   var settings = {  "pageId"                : "one",
+                     "templateType"          : "dust",
+                     "templateId"            : "promoitemlist",
+                     "template"              : "promoitemlist",
+                     "templatePrecompiled"   : true,
+                     "mainId"                : "promolist",
+                     "progressDivId"         : "lazyloaderProgressDiv",
+                     "moreUrl"               : _baseServUri + "getpromolist",
+                     "clearUrl"              : _baseServUri + "clearpromolist",
+                     "JSONP"				  : true,
+                     "JSONPCallback"		  : "jsoncallback"};
+
+   // Set up the post parameters to pass to the lazyloader reinitialize function
+   var parameters = {  "retrieve"    : options.retrieve,
+                       "retrieved"   : options.retrieved,
+                       "offset"      : options.offset };
+
+   // Reinitialize the lazyloader so that it correctly handles the listview on the artists page
+   $( "#one" ).lazyloader( "reInitialize", options, settings, parameters );
+}
+//});
+
+jQuery(document).on("lazyloaderdoneloading", "#one", function ( evt ){
+	var prices;
+	prices = jQuery(".precio");
+	for(var i = 0; i < prices.length; i++){
+		prices[i].innerText = formatPrice(prices[i].innerText);
+	}
+});
+

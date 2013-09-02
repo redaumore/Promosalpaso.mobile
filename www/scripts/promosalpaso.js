@@ -18,7 +18,7 @@ var _searchOrigin = "GPS"; /*CITY, FAV*/
 var _current_page = -1;
 
 function refreshPromoList(){
-	_searchOrigin = "GPS"
+	_searchOrigin = "GPS";
 	event.preventDefault();
 	if(_lat == null || _lng == null){
 		if(environment == "DEV" ){
@@ -42,6 +42,8 @@ function onSuccessPromoList(position) {
 	if(position.coords.accuracy <= 150){
 		_lat = position.coords.latitude;
 		_lng = position.coords.longitude;
+		jQuery("#lat").val(_lat);
+		jQuery("#lng").val(_lng);
 		console.log("Geoposition: "+_lat+", "+_lng+" +/- "+position.coords.accuracy);
 		loadPromoList();
 	}
@@ -65,6 +67,8 @@ function onSuccess(position){
 	if(position.coords.accuracy <= 150){
 		_lat = position.coords.latitude;
 		_lng = position.coords.longitude;
+		jQuery("#lat").val(_lat);
+		jQuery("#lng").val(_lng);
 		console.log("Geoposition: "+_lat+", "+_lng+" +/- "+position.coords.accuracy);
 		jQuery.mobile.hidePageLoadingMsg();
 	}
@@ -81,6 +85,8 @@ function onError(error) {
 		/*SAN JUSTO*/
 		_lat = "-34.682919"; 
 		_lng = "-58.572397";
+		jQuery("#lat").val(_lat);
+		jQuery("#lng").val(_lng);
 		console.log("onError: SAN JUSTO");
 	//	loadPromoList();
 	}
@@ -129,6 +135,7 @@ function loadPromoList(){
                     promolist += getPromoRecord(item);
                 });
                 jQuery("#promolist").html(promolist);
+                setupLazyLoad();
                 $.mobile.changePage(jQuery("#one"));
                 $.mobile.hidePageLoadingMsg();
         },
@@ -207,7 +214,7 @@ function getPromoRecord(promo){
     liString = liString.replace("#COMERCIO#", promo.name);
     liString = liString.replace("#DESCRIPCION#", promo.short_description);        
     liString = liString.replace("#PROMO#", promo.displayed_text);
-    liString = liString.replace("#PRECIO_DESDE#", (promo.value_since == 1)?"inline":"none");
+    liString = liString.replace("#PRECIO_DESDE#", (promo.value_since != null)?"inline":"none");
     liString = liString.replace("#PRECIO#", formatPrice(promo.promo_value));
     
     liString = liString.replace("#DISTANCIA#", promo.distance);
@@ -224,7 +231,7 @@ function getPamarByName(url, paramName){
     var strGET = url.substr(url.indexOf('?')+1,url.length - url.indexOf('?')); 
     var arrGET = strGET.split("&"); 
     var paramValue = '';
-    for(i=0;i<arrGET.length;i++){ 
+    for(var i=0;i<arrGET.length;i++){ 
           var aux = arrGET[i].split("="); 
           if (aux[0] == paramName){
                 paramValue = aux[1];
@@ -234,7 +241,7 @@ function getPamarByName(url, paramName){
 }
 
 function callPromoDetail(promotion_id){
-    var promotion_detail;
+    var promotion_detail = "";
     $.ajax({
         url: _baseServUri + 'getpromodetail',
         dataType: 'jsonp',
@@ -443,6 +450,8 @@ var liString = new String();
 
 function formatPrice(price){
     var formatedPrice = "";
+    if(price.indexOf(".") == -1)
+    	return price;
     point = price.indexOf(".00");
     if(point == -1)
         formatedPrice = price.substring(0, price.indexOf(".")) + price.substring(price.indexOf(".")+1, price.length).sup();
@@ -489,7 +498,7 @@ function getRegionsUpdate(){
 
 function addRegions(provinces, cities){
     var db = window.openDatabase("promosalpaso", "1.0", "Promos al Paso", 300000);
-    db.transaction(function(tx){populateRegionsDB(tx, provinces, cities)}, errorCB, successCB);
+    db.transaction(function(tx){populateRegionsDB(tx, provinces, cities);}, errorCB, successCB);
 }
 function populateRegionsDB(tx, provinces, cities) {
     if(provinces != null ){
@@ -533,7 +542,7 @@ function errorProvinceDDL(err) {
     }
 function queryProvinceSuccess(tx, results){
     jQuery('#state_select').empty();
-    for(i=0;i<results.rows.length;i++){
+    for(var i=0;i<results.rows.length;i++){
         jQuery('#state_select').append('<option value="'+results.rows.item(i).province_id+'">' + results.rows.item(i).name + '</option>');
     }
     jQuery("#state_select option:first").attr('selected','selected');
@@ -542,7 +551,7 @@ function queryProvinceSuccess(tx, results){
 }
 function addCites(province_id) {
     var db = window.openDatabase("promosalpaso", "1.0", "Promos al Paso", 200000);
-    db.transaction(function(tx){populateCityDDL(tx, province_id)}, errorCityDDL, successCityDDL);
+    db.transaction(function(tx){populateCityDDL(tx, province_id);}, errorCityDDL, successCityDDL);
 }
 function populateCityDDL(tx, province_id){
     tx.executeSql('SELECT city_id, name FROM city WHERE province_id = '+province_id+' ORDER BY name', [], queryCitySuccess, errorCB);
@@ -555,7 +564,7 @@ function errorCityDDL(err) {
     }
 function queryCitySuccess(tx, results){
     jQuery('#city_select').empty();
-    for(i=0;i<results.rows.length;i++){
+    for(var i=0;i<results.rows.length;i++){
         jQuery('#city_select').append('<option value="'+results.rows.item(i).city_id+'">' + results.rows.item(i).name + '</option>');
     }
     jQuery("#city_select option:first").attr('selected','selected');     
@@ -565,12 +574,12 @@ function queryCitySuccess(tx, results){
 
 //SEARCH
 function doSearch(){
-	_searchOrigin = "CITY"
+	_searchOrigin = "CITY";
     var city_id = jQuery("#city_select option:selected").val();
     if(city_id != null){
         jQuery("#promolist").html("");
         var db = window.openDatabase("promosalpaso", "1.0", "Promos al Paso", 200000);
-        db.transaction(function(tx){querySearchDB(tx, city_id)}, errorSearchDB);    
+        db.transaction(function(tx){querySearchDB(tx, city_id);}, errorSearchDB);    
     }
     else{
         showMessage("No hay ciudad seleccionada.", "Info", "Ok");
@@ -689,11 +698,6 @@ function retrieveResponses(){
         },
         error: function(jqXHR, textStatus, errorThrown){
         	$.mobile.hidePageLoadingMsg();
-            /*showMessage(
-            'En este momento no podemos mostrarte las respuestas a tus mensajes.',
-            'Error',
-            'OK'
-            );*/
         }
     });
 }
