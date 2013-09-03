@@ -143,7 +143,7 @@ function loadPromoList(){
             if(_firstAttemp){
                 _firstAttemp = false;
                 console.log("LoadPromoList-1: ".textStatus);
-                loadPromoList();
+                //loadPromoList();
             }
             else{
             	if(jqXHR.responseText != null)
