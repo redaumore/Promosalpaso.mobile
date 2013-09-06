@@ -136,6 +136,7 @@ function loadPromoList(){
                 });
                 jQuery("#promolist").html(promolist);
                 setupLazyLoad();
+                startWatchPosition();
                 $.mobile.changePage(jQuery("#one"));
                 $.mobile.hidePageLoadingMsg();
         },
@@ -706,5 +707,7 @@ function gotoContact(){
 	//retrieveResponses();
 	$.mobile.changePage(jQuery("#contact"));
 }
+
+
 
 

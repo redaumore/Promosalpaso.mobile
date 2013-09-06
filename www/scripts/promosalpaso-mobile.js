@@ -1,3 +1,14 @@
+var watchID = null;
+//Wait for device API libraries to load
+//
+document.addEventListener("deviceready", onDeviceReady, false);
+
+// device APIs are available
+//
+function onDeviceReady() {
+	
+}
+
 jQuery(document).bind("mobileinit", function(){
     $.mobile.defaultPageTransition = 'none';
 });
@@ -242,9 +253,6 @@ function initializeLazyLoader(){
    jQuery("#mobile_uuid").val(getuuid());
 }
 
-/*$('#one').on('pagebeforeshow', function(event) {
-* 
-*/
 function setupLazyLoad(){
    /* Reset the lazy loader instance for the albums page
     *   This resets the widget instance variables for the albums page    
@@ -299,3 +307,48 @@ jQuery(document).on("lazyloaderdoneloading", "#one", function ( evt ){
 	}
 });
 
+/*WATCH POSITION*/
+function startWatchPosition() {
+    // Throw an error if no update is received every 30 seconds
+    var options = { timeout: 30000 };
+    watchID = navigator.geolocation.watchPosition(onSuccessWatchPosition, onErrorWatchPosition, options);
+}
+
+// onSuccess Geolocation
+//
+function onSuccessWatchPosition(position) {
+    if(getDistance(jQuery("#lat").val(),jQuery("#lng").val(), 
+    				position.coords.latitude, position.coords.longitude) > 100){
+    	_lat = position.coords.latitude;
+    	_lng = position.coords.longitude;
+    	jQuery("#lat").val(_lat);
+    	jQuery("#lng").val(_lng);
+    	loadPromoList();
+    }  
+}
+
+// onError Callback receives a PositionError object
+//
+function onErrorWatchPosition(error) {
+    alert('onErrorWatchPosition. code: '    + error.code    + '\n' +
+          'message: ' + error.message + '\n');
+}
+
+function getDistance($lat1, $lng1, $lat2, $lng2)
+{
+	var $miles = false;
+    var $pi80 = Math.PI / 180;
+    $lat1 = $lat1 * $pi80;
+    $lng1 = $lng1 * $pi80;
+    $lat2 = $lat2 * $pi80;
+    $lng2 = $lng2 * $pi80;
+ 
+    $r = 6372.797; // mean radius of Earth in km
+    $dlat = $lat2 - $lat1;
+    $dlng = $lng2 - $lng1;
+    $a = Math.sin($dlat / 2) * Math.sin($dlat / 2) + Math.cos($lat1) * Math.cos($lat2) * Math.sin($dlng / 2) * Math.sin($dlng / 2);
+    $c = 2 * Math.atan2(Math.sqrt($a), Math.sqrt(1 - $a));
+    $km = $r * $c;
+ 
+    return ($miles ? ($km * 0.621371192) : Math.round($km * 1000));
+}
