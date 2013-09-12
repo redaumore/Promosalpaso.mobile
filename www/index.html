@@ -12,8 +12,8 @@
 <script src="scripts/detectizr.js"></script> -->
 <script src="scripts/jquery.mobile.lazyloader.js"></script>
 <script src="scripts/dust-core-2.0.2.js"></script>
-<!-- <script src="scripts/cordova.js"></script> -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKgb7PEB7WJtzazWBhDg5OwX09ybi2qh8&sensor=true" type="text/javascript"></script>
+<!-- <script src="scripts/cordova.js"></script> 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKgb7PEB7WJtzazWBhDg5OwX09ybi2qh8&sensor=true" type="text/javascript"></script>-->
 <script src="scripts/route-maps.js"></script>
 <script src="scripts/promosalpaso.js"></script>
 <script src="scripts/promosalpaso-mobile.js"></script>
@@ -249,5 +249,11 @@
 	       	<div id="category-container" style="margin-top: 5px;"></div>
         </div>
     </div>
+    <script>
+	    var script = document.createElement("script");
+	    script.type = "text/javascript";
+	    script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCKgb7PEB7WJtzazWBhDg5OwX09ybi2qh8&sensor=true&callback=global.initGmapApi";
+	    document.body.appendChild(script);
+    </script>
 </body>
 </HTML>

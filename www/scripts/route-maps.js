@@ -1,10 +1,14 @@
 
 var directionDisplay;
-var directionsService = new google.maps.DirectionsService();
+var directionsService; /* = new google.maps.DirectionsService();*/
 var map;
 var zoom;
+var global = {};
+global.initGmapApi = function (){
+	directionsService = new google.maps.DirectionsService();
+};
 
-  function initializemap() {
+function initializemap() {
 	  		var mapOptions;
 	  		var end = new google.maps.LatLng(_promo_lat, _promo_lng);
 	  		mapOptions= {
@@ -49,7 +53,8 @@ var zoom;
 			    destination:end,
 			    travelMode: google.maps.TravelMode.WALKING
 		};
-		
+		if(directionsService == null)
+			directionsService = new google.maps.DirectionsService();
 		directionsService.route(request, function(response, status) {
 	        if (status == google.maps.DirectionsStatus.OK) {
 	            directionsDisplay.setDirections(response);

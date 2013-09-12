@@ -236,6 +236,7 @@ function saveSelectedCategories(){
 }
 
 function initializeLazyLoader(){
+	console.log("initializeLazyLoader()");
 	 // Initialize the lazyloader widget
    $("#one").lazyloader();
 
@@ -254,6 +255,7 @@ function initializeLazyLoader(){
 }
 
 function setupLazyLoad(){
+	console.log("setupLazyLoad()");
    /* Reset the lazy loader instance for the albums page
     *   This resets the widget instance variables for the albums page    
     *   This is done here because the artists page is one level up
@@ -309,6 +311,7 @@ jQuery(document).on("lazyloaderdoneloading", "#one", function ( evt ){
 
 /*WATCH POSITION*/
 function startWatchPosition() {
+	console.log("startWatchPosition()");
     // Throw an error if no update is received every 30 seconds
     var options = { timeout: 30000 };
     watchID = navigator.geolocation.watchPosition(onSuccessWatchPosition, onErrorWatchPosition, options);
@@ -317,12 +320,15 @@ function startWatchPosition() {
 // onSuccess Geolocation
 //
 function onSuccessWatchPosition(position) {
+	console.log("onSuccessWatchPosition()");
+	console.log("latitude:"+position.coords.latitude+" longitude:"+position.coords.longitude);
     if(getDistance(jQuery("#lat").val(),jQuery("#lng").val(), 
     				position.coords.latitude, position.coords.longitude) > 100){
     	_lat = position.coords.latitude;
     	_lng = position.coords.longitude;
     	jQuery("#lat").val(_lat);
     	jQuery("#lng").val(_lng);
+    	console.log("onSuccessWatchPosition: distance>100");
     	loadPromoList();
     }  
 }
@@ -330,7 +336,7 @@ function onSuccessWatchPosition(position) {
 // onError Callback receives a PositionError object
 //
 function onErrorWatchPosition(error) {
-    alert('onErrorWatchPosition. code: '    + error.code    + '\n' +
+    console.log('onErrorWatchPosition. code: '    + error.code    + '\n' +
           'message: ' + error.message + '\n');
 }
 
