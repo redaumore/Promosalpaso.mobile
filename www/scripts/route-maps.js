@@ -5,7 +5,10 @@ var map;
 var zoom;
 var global = {};
 global.initGmapApi = function (){
+	console.log("initGmapApi: Google API Loaded");
 	directionsService = new google.maps.DirectionsService();
+	if(directionsService == null)
+		console.log("initGmapApi: Direction Service not loaded");
 };
 
 function initializemap() {

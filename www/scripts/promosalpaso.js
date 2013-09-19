@@ -36,6 +36,7 @@ function refreshPromoList(){
 	navigator.geolocation.getCurrentPosition(onSuccessPromoList, 
 	        onError, 
 	        {maximumAge:3000, timeout:6000, enableHighAccuracy: true});
+	initializeLazyLoader();
 }
 
 function onSuccessPromoList(position) {
@@ -114,7 +115,7 @@ function loadPromoList(){
             console.log(settings.url);
         },
         success: function(data, status){
-                console.log("loadPromoList: llamada a servicio exitosa");
+                console.log("loadPromoList: llamada a servicio exitosa. data.length:"+data.length);
                 window.localStorage.setItem("lastSearch", JSON.stringify(data));
                 if(data.length == 0){
                 	$.mobile.hidePageLoadingMsg();
@@ -130,12 +131,12 @@ function loadPromoList(){
 	                        return;
                     	}
                 }
+                setupLazyLoad();
                 var promolist = "";
                 $.each(data, function(i,item){
                     promolist += getPromoRecord(item);
                 });
                 jQuery("#promolist").html(promolist);
-                setupLazyLoad();
                 startWatchPosition();
                 $.mobile.changePage(jQuery("#one"));
                 $.mobile.hidePageLoadingMsg();

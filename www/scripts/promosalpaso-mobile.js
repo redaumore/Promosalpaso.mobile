@@ -32,8 +32,6 @@ jQuery(document).ready(function(){
         getGeoLocation();
         console.log("Trayendo categorias...");
         getCategories(false);
-        initializeLazyLoader();
-        
   });
 
 
@@ -296,7 +294,7 @@ function setupLazyLoad(){
                        "retrieved"   : options.retrieved,
                        "offset"      : options.offset };
 
-   // Reinitialize the lazyloader so that it correctly handles the listview on the artists page
+   // Reinitialize the lazyloader so that it correctly handles the listview 
    $( "#one" ).lazyloader( "reInitialize", options, settings, parameters );
 }
 //});
@@ -321,6 +319,12 @@ function startWatchPosition() {
 //
 function onSuccessWatchPosition(position) {
 	console.log("onSuccessWatchPosition()");
+	if(jQuery.mobile.activePage[0].id =! "one"){
+		navigator.geolocation.clearWatch(watchID);
+		console.log("Stop watching");
+		return;
+	}
+		
 	console.log("latitude:"+position.coords.latitude+" longitude:"+position.coords.longitude);
     if(getDistance(jQuery("#lat").val(),jQuery("#lng").val(), 
     				position.coords.latitude, position.coords.longitude) > 100){
@@ -330,7 +334,8 @@ function onSuccessWatchPosition(position) {
     	jQuery("#lng").val(_lng);
     	console.log("onSuccessWatchPosition: distance>100");
     	loadPromoList();
-    }  
+    }
+	 
 }
 
 // onError Callback receives a PositionError object
@@ -338,6 +343,7 @@ function onSuccessWatchPosition(position) {
 function onErrorWatchPosition(error) {
     console.log('onErrorWatchPosition. code: '    + error.code    + '\n' +
           'message: ' + error.message + '\n');
+    navigator.geolocation.clearWatch(watchID);
 }
 
 function getDistance($lat1, $lng1, $lat2, $lng2)
