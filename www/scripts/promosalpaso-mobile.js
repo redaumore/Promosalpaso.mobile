@@ -32,6 +32,8 @@ jQuery(document).ready(function(){
         getGeoLocation();
         console.log("Trayendo categorias...");
         getCategories(false);
+        console.log("Lazy Load initialize...");
+        initializeLazyLoader();
   });
 
 
@@ -319,7 +321,7 @@ function startWatchPosition() {
 //
 function onSuccessWatchPosition(position) {
 	console.log("onSuccessWatchPosition()");
-	if(jQuery.mobile.activePage[0].id =! "one"){
+	if(jQuery.mobile.activePage.selector =! "#one"){
 		navigator.geolocation.clearWatch(watchID);
 		console.log("Stop watching");
 		return;

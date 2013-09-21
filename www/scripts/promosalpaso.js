@@ -36,7 +36,7 @@ function refreshPromoList(){
 	navigator.geolocation.getCurrentPosition(onSuccessPromoList, 
 	        onError, 
 	        {maximumAge:3000, timeout:6000, enableHighAccuracy: true});
-	initializeLazyLoader();
+	setupLazyLoad();
 }
 
 function onSuccessPromoList(position) {
@@ -131,7 +131,6 @@ function loadPromoList(){
 	                        return;
                     	}
                 }
-                setupLazyLoad();
                 var promolist = "";
                 $.each(data, function(i,item){
                     promolist += getPromoRecord(item);
@@ -399,6 +398,7 @@ function gotoFavoritos(){
         if(favoritos != ""){
         	$.mobile.showPageLoadingMsg('a', "Recuperando favoritas...", false);
             _inFavorites = true;
+            setupLazyLoad();
             loadPromoListByIds(favoritos.substring(0, favoritos.lastIndexOf(",")), true);
             return;
         }
@@ -529,6 +529,7 @@ function successCB(){
 function gotoSearch(){
     var db = window.openDatabase("promosalpaso", "1.0", "Promos al Paso", 200000);
     db.transaction(populateProvinceDDL, errorProvinceDDL, successProvinceDDL);
+    setupLazyLoad();
     jQuery('#city_button').hide();
     jQuery.mobile.changePage("#search");
     $.mobile.hidePageLoadingMsg();
