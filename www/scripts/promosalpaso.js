@@ -36,7 +36,6 @@ function refreshPromoList(){
 	navigator.geolocation.getCurrentPosition(onSuccessPromoList, 
 	        onError, 
 	        {maximumAge:3000, timeout:6000, enableHighAccuracy: true});
-	setupLazyLoad();
 }
 
 function onSuccessPromoList(position) {
@@ -56,6 +55,7 @@ function onSuccessPromoList(position) {
 			onError("");
 		}
 	}
+	startWatchPosition();
 };
 
 function getGeoLocation(){
@@ -100,6 +100,7 @@ function onError(error) {
 function loadPromoList(){
 	var uuid;
 	uuid = getuuid();
+	setupLazyLoad();
     $.ajax({
         url: _baseServUri + 'getpromolist',
         dataType: 'jsonp',
@@ -118,7 +119,7 @@ function loadPromoList(){
                 console.log("loadPromoList: llamada a servicio exitosa. data.length:"+data.length);
                 window.localStorage.setItem("lastSearch", JSON.stringify(data));
                 if(data.length == 0){
-                	$.mobile.hidePageLoadingMsg();
+                	jQuery.mobile.hidePageLoadingMsg();
                     if(jQuery.mobile.activePage[0].id == "main"){
                         showMessage('No se encontraron promos. Intenta nuestra búsqueda manual.', 'Info', 'Ok');
                         event.preventDefault();
@@ -136,9 +137,7 @@ function loadPromoList(){
                     promolist += getPromoRecord(item);
                 });
                 jQuery("#promolist").html(promolist);
-                startWatchPosition();
-                $.mobile.changePage(jQuery("#one"));
-                $.mobile.hidePageLoadingMsg();
+                jQuery.mobile.changePage(jQuery("#one"));
         },
         error: function(jqXHR, textStatus, errorThrown){
             if(_firstAttemp){
@@ -151,7 +150,7 @@ function loadPromoList(){
             		console.log("LoadPromoList-2: ".jqXHR.responseText);
             	else
             		console.log("LoadPromoList-2(status): ".textStatus);
-            	$.mobile.hidePageLoadingMsg();
+            	jQuery.mobile.hidePageLoadingMsg();
 	            showMessage('Error en el servicio. Por favor intentalo en unos minutos...', 'Error', 'Ok');
 	        }
         }
@@ -189,7 +188,7 @@ function loadPromoListByIds(ids, fromFavoritos){
             	    	window.localStorage.setItem("favoritos", newfavoritos);
                 	jQuery("#promolist").html(promolist);
                     $.mobile.changePage(jQuery("#one"));
-                    $.mobile.hidePageLoadingMsg();
+                    jQuery.mobile.hidePageLoadingMsg();
                 }
         },
         error: function(jqXHR, textStatus, errorThrown){
@@ -198,7 +197,7 @@ function loadPromoListByIds(ids, fromFavoritos){
                 loadPromoListByIds(ids);
             }
             else{
-            	$.mobile.hidePageLoadingMsg();
+            	jQuery.mobile.hidePageLoadingMsg();
                 showMessage('Hubo un error recuperando las favoritas. Por favor intentalo más tarde...', 'Error', 'Ok');
             }
         },
@@ -216,9 +215,9 @@ function getPromoRecord(promo){
     liString = liString.replace("#DESCRIPCION#", promo.short_description);        
     liString = liString.replace("#PROMO#", promo.displayed_text);
     liString = liString.replace("#PRECIO_DESDE#", (promo.value_since != null)?"inline":"none");
-    liString = liString.replace("#PRECIO#", formatPrice(promo.promo_value));
-    
-    liString = liString.replace("#DISTANCIA#", promo.distance);
+    liString = liString.replace("#PRECIO#", (promo.is_percentage != null)?formatPercentage(promo.promo_value):formatPrice(promo.promo_value));
+    if(_searchOrigin == "GPS")
+    	liString = liString.replace("#DISTANCIA#", promo.distance);
     return liString;
 }
 
@@ -257,12 +256,12 @@ function callPromoDetail(promotion_id){
         },
         success: function(data, status){
                 loadPromoDetail(data);
-                $.mobile.hidePageLoadingMsg();
+                jQuery.mobile.hidePageLoadingMsg();
                 zoom = null;
                 $.mobile.changePage(jQuery("#detail"));
         },
         error: function(jqXHR, textStatus, errorThrown){
-        	$.mobile.hidePageLoadingMsg();
+        	jQuery.mobile.hidePageLoadingMsg();
             showMessage('Hubo un error accediendo a los datos de la Promo. Por favor intenta más tarde...', 'Error', 'OK');
         }
     });
@@ -463,6 +462,19 @@ function formatPrice(price){
     return formatedPrice;
 }
 
+function formatPercentage(value){
+    var formatedPrice = "";
+    if(value.indexOf(".") == -1)
+    	return price;
+    point = value.indexOf(".00");
+    if(point == -1)
+        formatedPrice = value.substring(0, value.indexOf(".")) + value.substring(value.indexOf(".")+1, value.length).sup();
+    else
+        formatedPrice = value.substring(0, value.indexOf("."));
+    
+    return formatedPrice;
+}
+
 
 
 //CONFIG
@@ -483,17 +495,17 @@ function getRegionsUpdate(){
                 console.log("getRegionUpdate: llamada a servicio exitosa");
                 if(data == null){
                     console.log("No se actualizaron regiones");
-                    $.mobile.hidePageLoadingMsg();
+                    jQuery.mobile.hidePageLoadingMsg();
                     return;
                 }
                 addRegions(data.province, data.city);
                 setLastUpdate(new Date());
-                $.mobile.hidePageLoadingMsg();
+                jQuery.mobile.hidePageLoadingMsg();
         },
         error: function(jqXHR, textStatus, errorThrown){
             console.log("Error getRegionUpdate: " + textStatus);
             showMessage('Hubo un error actualizando las ciudades', 'Error', 'Ok');
-            $.mobile.hidePageLoadingMsg();
+            jQuery.mobile.hidePageLoadingMsg();
         }
     });
 }
@@ -532,7 +544,7 @@ function gotoSearch(){
     setupLazyLoad();
     jQuery('#city_button').hide();
     jQuery.mobile.changePage("#search");
-    $.mobile.hidePageLoadingMsg();
+    jQuery.mobile.hidePageLoadingMsg();
 }
 function populateProvinceDDL(tx){
     tx.executeSql('SELECT province_id, name FROM province ORDER BY name', [], queryProvinceSuccess, errorCB);
@@ -621,11 +633,11 @@ function showPromoImage(){
         },
         success: function(data, status){
         	jQuery("#promo_image").attr("src", data.image);
-            $.mobile.hidePageLoadingMsg();
+            jQuery.mobile.hidePageLoadingMsg();
             $.mobile.changePage(jQuery("#promo-image"));
         },
         error: function(jqXHR, textStatus, errorThrown){
-        	$.mobile.hidePageLoadingMsg();
+        	jQuery.mobile.hidePageLoadingMsg();
             showMessage(
             'Hubo un error accediendo a la imagen de la Promo. Por favor intenta más tarde...',
             'Error',
@@ -663,11 +675,11 @@ function sendMessage(){
             console.log(settings.url);
         },
         success: function(data, status){
-        	$.mobile.hidePageLoadingMsg();
+        	jQuery.mobile.hidePageLoadingMsg();
             $.mobile.changePage(jQuery("#main"));
         },
         error: function(jqXHR, textStatus, errorThrown){
-        	$.mobile.hidePageLoadingMsg();
+        	jQuery.mobile.hidePageLoadingMsg();
             showMessage(
             'Hubo un error enviando el mensaje. Por favor intenta más tarde...',
             'Error',
@@ -694,13 +706,13 @@ function retrieveResponses(){
             console.log(settings.url);
         },
         success: function(data, status){
-        	$.mobile.hidePageLoadingMsg();
+        	jQuery.mobile.hidePageLoadingMsg();
             $.each(date, function(i,item){
             	
             });
         },
         error: function(jqXHR, textStatus, errorThrown){
-        	$.mobile.hidePageLoadingMsg();
+        	jQuery.mobile.hidePageLoadingMsg();
         }
     });
 }

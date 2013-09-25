@@ -26,6 +26,7 @@ jQuery(document).ready(function(){
             setLastUpdate(new Date(0));
         console.log("Ultima actualización: "+_last_update);    
         console.log("Actualizando ciudades...");
+        initializeLazyLoader();
         jQuery.mobile.showPageLoadingMsg('a', "Buscando tu localización...", false);
         getRegionsUpdate();
         console.log("Geolocalizando...");
@@ -33,7 +34,7 @@ jQuery(document).ready(function(){
         console.log("Trayendo categorias...");
         getCategories(false);
         console.log("Lazy Load initialize...");
-        initializeLazyLoader();
+        
   });
 
 
@@ -307,6 +308,12 @@ jQuery(document).on("lazyloaderdoneloading", "#one", function ( evt ){
 	for(var i = 0; i < prices.length; i++){
 		prices[i].innerText = formatPrice(prices[i].innerText);
 	}
+});
+
+jQuery(document).on('pageinit','#one', function(event){
+  jQuery("#promolist").listview("refresh");
+  jQuery.mobile.hidePageLoadingMsg();
+  
 });
 
 /*WATCH POSITION*/
