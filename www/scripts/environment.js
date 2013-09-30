@@ -2,6 +2,7 @@
 /*var _baseUri = "http://dev.promosalpaso.com/";*/
 var _baseUri = "http://promosalpaso.local/";
 var environment = "PROD";
+var _pagesize = 7;
 
 /*SAN JUSTO*/
 //var _lat = "-34.681774410598"; //"-34.6463";

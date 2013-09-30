@@ -4,7 +4,8 @@ var directionsService; /* = new google.maps.DirectionsService();*/
 var map;
 var zoom;
 var global = {};
-global.initGmapApi = function (){
+	
+function initGmapApi (){
 	console.log("initGmapApi: Google API Loaded");
 	directionsService = new google.maps.DirectionsService();
 	if(directionsService == null)
@@ -25,7 +26,7 @@ function initializemap() {
 			map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 			
 			new google.maps.Marker({
-				icon: "http://dev.promosalpaso.com/images/pap_location.png",
+				icon: _baseUri + "images/pap_location.png",
 		        position: end,
 		        map: map,
 		    });
@@ -65,14 +66,14 @@ function initializemap() {
 	    });
 		
 		new google.maps.Marker({
-			icon: "http://dev.promosalpaso.com/images/pap_location.png",
+			icon: _baseUri + "images/pap_location.png",
 	        position: end,
 	        map: map,
 	    });
 		
 		new google.maps.Marker({
 			position: start,
-			icon: "http://dev.promosalpaso.com/images/pap_smile.png",
+			icon: _baseUri + "images/pap_smile.png",
 	        map: map,
 	    });
 }
@@ -115,13 +116,13 @@ function initializemap() {
 			if(_searchOrigin == "GPS"){
 				new google.maps.Marker({
 					position: start,
-					icon: "http://dev.promosalpaso.com/images/pap_smile.png",
+					icon: _baseUri + "images/pap_smile.png",
 			        map: map,
 			    });
 			}
 			
 			new google.maps.Marker({
-				icon: "http://dev.promosalpaso.com/images/pap_location.png",
+				icon: _baseUri + "images/pap_location.png",
 		        center: end,
 		        map: map,
 		    });

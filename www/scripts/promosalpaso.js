@@ -17,9 +17,15 @@ var _last_update;
 var _searchOrigin = "GPS"; /*CITY, FAV*/
 var _current_page = -1;
 
+document.addEventListener("deviceready", function(){
+	console.log("calling onDeviceReady");
+	onDeviceReady();
+},true);
+
 function refreshPromoList(){
 	_searchOrigin = "GPS";
-	event.preventDefault();
+	//event.preventDefault();
+	console.log("refreshPromoList");
 	if(_lat == null || _lng == null){
 		if(environment == "DEV" ){
 			/*SAN JUSTO*/
@@ -100,7 +106,9 @@ function onError(error) {
 function loadPromoList(){
 	var uuid;
 	uuid = getuuid();
-	setupLazyLoad();
+	//setupLazyLoad();
+	jQuery.mobile.changePage(jQuery("#one"));
+	return;
     $.ajax({
         url: _baseServUri + 'getpromolist',
         dataType: 'jsonp',
