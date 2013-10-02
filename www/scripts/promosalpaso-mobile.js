@@ -27,10 +27,8 @@ function onDeviceReady(){
         getGeoLocation();
         console.log("Trayendo categorias...");
         getCategories(false);
-        console.log("Lazy Load initialize...");
-        initializeLazyLoader();
-        
-  }
+        jQuery('#promolist').trigger('create');
+ }
 
 
 jQuery(document).on("change blur",'#state_select', function() {
@@ -231,89 +229,6 @@ function saveSelectedCategories(){
 	window.localStorage.setItem("selected_categories", cats.toString());
 }
 
-function initializeLazyLoader(){
-	console.log("initializeLazyLoader()");
-	 // Initialize the lazyloader widget
-   $("#main").lazyloader();
-
-   /* Set some default options for the lazyloader
-    *   the first three set the timeout value for when the widget should check
-    *   the current scroll position relative to page height to decide whether
-    *   or not to load more yet.  The showprogress option is to specify the
-    *   duration of the fadeIn animation for the lazyloaderProgressDiv.
-    */
-   $.mobile.lazyloader.prototype.timeoutOptions.mousewheel = 300;
-   $.mobile.lazyloader.prototype.timeoutOptions.scrollstart = 700;
-   $.mobile.lazyloader.prototype.timeoutOptions.scrollstop = 100;
-   $.mobile.lazyloader.prototype.timeoutOptions.showprogress = 500;
-   
-   jQuery("#mobile_uuid").val(getuuid());
-}
-
-jQuery(document).on('pageinit', '#one', function(evt, ui) {
-	console.log("one.pageinit");
-	setupLazyLoad();
-	//$( "#one" ).lazyloader( "loadMore" );
-	//jQuery("#promolist").listview("refresh");
-	//jQuery.mobile.hidePageLoadingMsg();
-});
-
-function setupLazyLoad(){
-	console.log("setupLazyLoad()");
-   /* Reset the lazy loader instance for the albums page
-    *   This resets the widget instance variables for the albums page    
-    *   This is done here because the artists page is one level up
-    *   from the albums page, so it needs to be reset in case the user
-    *   selects a different artist who will have their own albums that
-    *   will need to be lazy loaded
-    *   
-    *   Note: in this example, "reset" is the function and "albums" is
-    *      the pageId of the albums page 
-    */
-   //$( "#one" ).lazyloader( "reset", "albums" );
-
-   // Use an automatic threshold that's a function of the height of the viewport
-   threshold = 420; //$( window ).height() * 2;
-   $("#main").lazyloader( "reset", "one" );
-   // Set up the variable options to pass to the lazyloader reinitialize function
-   var options = {   "threshold"   : threshold,
-                     "retrieve"    : _pagesize,
-                     "retrieved"   : _pagesize,
-                     "bubbles"     : true,
-                     "offset"      : 0 };
-
-   // Set up the page specific settings to pass to the lazyloader reinitialize function
-   var settings = {  "pageId"                : "one",
-                     "templateType"          : "dust",
-                     "templateId"            : "promoitemlist",
-                     "template"              : "promoitemlist",
-                     "templatePrecompiled"   : true,
-                     "mainId"                : "promolist",
-                     "progressDivId"         : "lazyloaderProgressDiv",
-                     "moreUrl"               : _baseServUri + "getpromolist",
-                     "clearUrl"              : _baseServUri + "clearpromolist",
-                     "JSONP"				  : true,
-                     "JSONPCallback"		  : "jsoncallback"};
-
-   // Set up the post parameters to pass to the lazyloader reinitialize function
-   var parameters = {  "retrieve"    : options.retrieve,
-                       "retrieved"   : options.retrieved,
-                       "offset"      : options.offset};
-
-   // Reinitialize the lazyloader so that it correctly handles the listview 
-   $( "#main" ).lazyloader( "reInitialize", options, settings, parameters );
-}
-//});
-
-jQuery(document).on("lazyloaderdoneloading", "#one", function ( evt ){
-	console.log("lazyloaderdoneloading");
-	var prices;
-	prices = jQuery(".precio");
-	for(var i = 0; i < prices.length; i++){
-		prices[i].innerText = formatPrice(prices[i].innerText);
-	}
-});
-
 /*WATCH POSITION*/
 function startWatchPosition() {
 	console.log("startWatchPosition()");
@@ -371,39 +286,3 @@ function getDistance($lat1, $lng1, $lat2, $lng2)
  
     return ($miles ? ($km * 0.621371192) : Math.round($km * 1000));
 }
-
-jQuery(document).on("lazyloadercreate", "#one", function ( evt ){
-	console.log("lazyloadercreate");
-});
-
-jQuery(document).on("lazyloaderbeforecreate", "#one", function ( evt ){
-	console.log("lazyloaderbeforecreate");
-});
-
-jQuery(document).on("lazyloaderdestroy", "#one", function ( evt ){
-	console.log("lazyloaderdestroy");
-});
-
-jQuery(document).on("lazyloaderdoneloading", "#one", function ( evt ){
-	console.log("lazyloaderdoneloading");
-});
-
-jQuery(document).on("lazyloaderalldone", "#one", function ( evt ){
-	console.log("lazyloaderalldone");
-});
-
-jQuery(document).on("lazyloaderbusy", "#one", function ( evt ){
-	console.log("lazyloaderbusy");
-});
-
-jQuery(document).on("lazyloadererror", "#one", function ( evt ){
-	console.log("lazyloadererror");
-});
-
-jQuery(document).on("lazyloaderreset", "#one", function ( evt ){
-	console.log("lazyloaderreset");
-});
-
-jQuery(document).on("lazyloaderresetall", "#one", function ( evt ){
-	console.log("lazyloaderresetall");
-});

@@ -516,7 +516,7 @@ span>sup{
   margin-top: 1px;
   *margin-right: .3em;
   line-height: 14px;
-  vertical-align: text-top;
+  /*vertical-align: text-top;*/
   background-image: url("images/glyphicons-halflings-orange.png");
   /*background-image: url("images/glyphicons-halflings.png");*/
   background-position: 14px 14px;
@@ -1111,5 +1111,32 @@ ul li:nth-child(even) { background-color:#fff; }
 .top-top{
 	z-index:200;
 	background-color: #272b30;
+}
+
+.get-more{
+	width:100%; 
+	min-height: 50px;
+	line-height: 50px; 
+	text-align: center;
+	color: #FF6A15 /*{a-bar-color}*/;
+	text-shadow: 0 0 1px #FF6A15;
+	font-size: 1.3em;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	font-weight: bold;
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #0A0A0A /*{a-bar-background-start}*/), to( #3D3D3D /*{a-bar-background-end}*/)); /* Saf4+, Chrome */
+	background-image: -webkit-linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #3D3D3D /*{a-bar-background-end}*/); /* Chrome 10+, Saf5.1+ */
+	background-image:    -moz-linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #3D3D3D /*{a-bar-background-end}*/); /* FF3.6 */
+	background-image:     -ms-linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #3D3D3D /*{a-bar-background-end}*/); /* IE10 */
+	background-image:      -o-linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #3D3D3D /*{a-bar-background-end}*/); /* Opera 11.10+ */
+	background-image:         linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #3D3D3D /*{a-bar-background-end}*/);
+}
+
+.get-more:hover{
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #0A0A0A /*{a-bar-background-start}*/), to( #3D3D3D /*{a-bar-background-end}*/)); /* Saf4+, Chrome */
+	background-image: -webkit-linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #626262 /*{a-bar-background-end}*/); /* Chrome 10+, Saf5.1+ */
+	background-image:    -moz-linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #626262 /*{a-bar-background-end}*/); /* FF3.6 */
+	background-image:     -ms-linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #626262 /*{a-bar-background-end}*/); /* IE10 */
+	background-image:      -o-linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #626262 /*{a-bar-background-end}*/); /* Opera 11.10+ */
+	background-image:         linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #626262 /*{a-bar-background-end}*/);
 }
 /*END******************LAZYLOADING PROMOLIST*/

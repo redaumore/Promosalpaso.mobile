@@ -51,7 +51,7 @@ function onSuccessPromoList(position) {
 		jQuery("#lat").val(_lat);
 		jQuery("#lng").val(_lng);
 		console.log("Geoposition: "+_lat+", "+_lng+" +/- "+position.coords.accuracy);
-		loadPromoList();
+		loadPromoList(0);
 	}
 	else{
 		if(environment == "DEV")
@@ -103,20 +103,15 @@ function onError(error) {
 	}
 }
 
-function loadPromoList(){
-	var uuid;
-	uuid = getuuid();
-	//setupLazyLoad();
-	jQuery.mobile.changePage(jQuery("#one"));
-	return;
-    $.ajax({
+function loadPromoList(page){
+	$.ajax({
         url: _baseServUri + 'getpromolist',
         dataType: 'jsonp',
         data: {"lat": _lat,
                "lng": _lng, 
                "cat": window.localStorage.getItem("selected_categories"),
-               "mobile_uuid": uuid,
-               "page": _current_page + 1},
+               "mobile_uuid": getuuid(),
+               "page": page},
         jsonp: 'jsoncallback',
         contentType: "application/json; charset=utf-8",
         timeout: 10000,
@@ -140,12 +135,31 @@ function loadPromoList(){
 	                        return;
                     	}
                 }
+                var count_promolist = 0;
                 var promolist = "";
-                $.each(data, function(i,item){
+                var total = data.data[0].total;
+                var count = data.data[0].count;
+                $.each(data.data[0].json, function(i,item){
                     promolist += getPromoRecord(item);
                 });
-                jQuery("#promolist").html(promolist);
-                jQuery.mobile.changePage(jQuery("#one"));
+                if(page == 0){
+                	jQuery("#promolist").html(promolist);
+                	count_promolist = jQuery('#promolist li').size();
+                	if(total > count_promolist)
+                		jQuery('#promolist').append(getLastItem(page+1));
+                	jQuery.mobile.changePage(jQuery("#one"));
+                }
+                else{
+                	jQuery("#promolist li").eq(jQuery("#promolist").children().size()-1).remove();  
+                	jQuery('#promolist').append(promolist);
+                	count_promolist = jQuery('#promolist li').size();
+                	if(total > count_promolist)
+                		jQuery('#promolist').append(getLastItem(page+1)).listview('refresh');
+                	else
+                		jQuery('#promolist').listview('refresh');
+                }
+                
+                
         },
         error: function(jqXHR, textStatus, errorThrown){
             if(_firstAttemp){
@@ -405,7 +419,6 @@ function gotoFavoritos(){
         if(favoritos != ""){
         	$.mobile.showPageLoadingMsg('a', "Recuperando favoritas...", false);
             _inFavorites = true;
-            setupLazyLoad();
             loadPromoListByIds(favoritos.substring(0, favoritos.lastIndexOf(",")), true);
             return;
         }
@@ -452,6 +465,17 @@ var liString = new String();
 	liString += '                     </td>';
 	liString += '                  </tr>';
 	liString += '               </table>';
+	liString += '            </a></div></div></li>';
+
+    return liString;
+}
+
+function getLastItem( nextPage){
+	var liString = new String();
+	liString = '<li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="a" class="ui-btn ui-li ui-btn-up-a ui-li-static"  style="padding: 0px; border: 1px solid #666666">';
+	liString += '   <div class="ui-btn-inner ui-li ui-li-static ui-btn-up-a" style="padding: 0px;">';
+	liString += '       <div class="ui-btn-text registro">';
+	liString += '           <a href="#" data-transition="slide" onclick="loadPromoList('+nextPage+');"><div class="get-more"><i class="icon-plus-sign "/> Traer m\u00e1s <i class="icon-plus-sign "/></div>'; //<a href="#ID#">';
 	liString += '            </a></div></div></li>';
 
     return liString;
@@ -549,7 +573,6 @@ function successCB(){
 function gotoSearch(){
     var db = window.openDatabase("promosalpaso", "1.0", "Promos al Paso", 200000);
     db.transaction(populateProvinceDDL, errorProvinceDDL, successProvinceDDL);
-    setupLazyLoad();
     jQuery('#city_button').hide();
     jQuery.mobile.changePage("#search");
     jQuery.mobile.hidePageLoadingMsg();
