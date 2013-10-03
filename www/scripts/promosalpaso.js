@@ -138,7 +138,6 @@ function loadPromoList(page){
                 var count_promolist = 0;
                 var promolist = "";
                 var total = data.data[0].total;
-                var count = data.data[0].count;
                 $.each(data.data[0].json, function(i,item){
                     promolist += getPromoRecord(item);
                 });
@@ -641,7 +640,7 @@ function querySearchSuccess(tx, results) {
         _lat = results.rows.item(0).latitude;
         _lng = results.rows.item(0).longitude;
         console.log("Geoposition search: "+results.rows.item(0).name+" "+_lat+", "+_lng);
-        loadPromoList();
+        loadPromoList(0);
     }
 }
 function errorSearchDB(err){
