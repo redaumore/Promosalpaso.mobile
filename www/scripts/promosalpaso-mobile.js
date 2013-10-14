@@ -27,7 +27,7 @@ function onDeviceReady(){
         getGeoLocation();
         console.log("Trayendo categorias...");
         getCategories(false);
-        jQuery('#promolist').trigger('create');
+        jQuery('#promolist').listview();
  }
 
 

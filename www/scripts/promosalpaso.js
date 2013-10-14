@@ -22,10 +22,13 @@ document.addEventListener("deviceready", function(){
 	onDeviceReady();
 },true);
 
+jQuery(document).on("pagebeforeshow", "#one", function(event, data) {
+	console.log("pagebeforeshow event fired");
+	$(this).find('ul').listview('refresh');
+});
+
 function refreshPromoList(){
 	_searchOrigin = "GPS";
-	//event.preventDefault();
-	console.log("refreshPromoList");
 	if(_lat == null || _lng == null){
 		if(environment == "DEV" ){
 			/*SAN JUSTO*/
@@ -119,9 +122,9 @@ function loadPromoList(page){
             console.log(settings.url);
         },
         success: function(data, status){
-                console.log("loadPromoList: llamada a servicio exitosa. data.length:"+data.length);
+                console.log("loadPromoList: llamada a servicio exitosa. data.length:"+data.data.length);
                 window.localStorage.setItem("lastSearch", JSON.stringify(data));
-                if(data.length == 0){
+                if(data.data.length == 0){
                 	jQuery.mobile.hidePageLoadingMsg();
                     if(jQuery.mobile.activePage[0].id == "main"){
                         showMessage('No se encontraron promos. Intenta nuestra búsqueda manual.', 'Info', 'Ok');
