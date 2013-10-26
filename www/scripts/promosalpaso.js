@@ -22,11 +22,6 @@ document.addEventListener("deviceready", function(){
 	onDeviceReady();
 },true);
 
-jQuery(document).on("pagebeforeshow", "#one", function(event, data) {
-	console.log("pagebeforeshow event fired");
-	$(this).find('ul').listview('refresh');
-});
-
 function refreshPromoList(){
 	_searchOrigin = "GPS";
 	if(_lat == null || _lng == null){
@@ -145,7 +140,7 @@ function loadPromoList(page){
                     promolist += getPromoRecord(item);
                 });
                 if(page == 0){
-                	jQuery("#promolist").html(promolist);
+                	jQuery("#promolist").html(promolist).trigger("create");;
                 	count_promolist = jQuery('#promolist li').size();
                 	if(total > count_promolist)
                 		jQuery('#promolist').append(getLastItem(page+1));
@@ -442,9 +437,9 @@ function setFullScreen() {
 
 function getLiString(){
 var liString = new String();
-
-	liString = '<li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="a" class="ui-btn ui-li-has-arrow ui-li ui-li-has-thumb ui-btn-up-a ui-li-static"  style="padding: 0px; border: 1px solid #666666">';
-	liString += '   <div class="ui-btn-inner ui-li ui-li-static ui-btn-up-a" style="padding: 0px;">';
+	//liString = '<li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="a" class="ui-btn ui-li-has-arrow ui-li ui-li-has-thumb ui-btn-up-a ui-li-static"  style="padding: 0px; border: 1px solid #666666">';
+	liString = '<li class="li-promoitem">';
+	//liString += '   <div class="ui-btn-inner ui-li ui-li-static ui-btn-up-a" style="padding: 0px;">';
 	liString += '       <div class="ui-btn-text registro">';
 	liString += '           <a href="#" data-transition="slide" onclick="gotoPromo(#ID#);">'; //<a href="#ID#">';
 	liString += '               <table class="aviso">';
@@ -467,18 +462,18 @@ var liString = new String();
 	liString += '                     </td>';
 	liString += '                  </tr>';
 	liString += '               </table>';
-	liString += '            </a></div></div></li>';
+	liString += '            </a></div></li>';
 
     return liString;
 }
 
 function getLastItem( nextPage){
 	var liString = new String();
-	liString = '<li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="a" class="ui-btn ui-li ui-btn-up-a ui-li-static"  style="padding: 0px; border: 1px solid #666666">';
-	liString += '   <div class="ui-btn-inner ui-li ui-li-static ui-btn-up-a" style="padding: 0px;">';
+	liString = '<li class="li-promoitem">';
+	//liString += '   <div class="ui-btn-inner ui-li ui-li-static ui-btn-up-a" style="padding: 0px;">';
 	liString += '       <div class="ui-btn-text registro">';
 	liString += '           <a href="#" data-transition="slide" onclick="loadPromoList('+nextPage+');"><div class="get-more"><i class="icon-plus-sign "/> Traer m\u00e1s <i class="icon-plus-sign "/></div>'; //<a href="#ID#">';
-	liString += '            </a></div></div></li>';
+	liString += '            </a></div></li>';
 
     return liString;
 }

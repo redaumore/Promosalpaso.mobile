@@ -1,6 +1,6 @@
     //var _baseUri = "http://192.168.1.34/";
-var _baseUri = "http://dev.promosalpaso.com/";
-//var _baseUri = "http://promosalpaso.local/";
+//var _baseUri = "http://dev.promosalpaso.com/";
+var _baseUri = "http://promosalpaso.local/";
 var environment = "PROD";
 var _pagesize = 7;
 
@@ -25,3 +25,9 @@ function getuuid(){
 		return "8218218921892";
 }
 
+$(document).bind("mobileinit", function(){
+    console.log("mobileinit");
+    $.mobile.defaultDialogTransition = "none";
+    $.mobile.defaultPageTransition = "none";
+    $.mobile.pushStateEnabled = false;
+});

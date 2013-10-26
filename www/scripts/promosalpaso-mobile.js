@@ -1,12 +1,18 @@
 var watchID = null;
-//Wait for device API libraries to load
-//
-//window.addEventListener("deviceready", onDeviceReady);
 
-jQuery(document).bind("mobileinit", function(){
-	console.log("binding mobileinit");
-    $.mobile.defaultPageTransition = 'none';
+/*******************EVENTOS DE PAGE*********************/
+jQuery(document).on("pagebeforeshow", "#one", function(event, data) {
+	console.log("pagebeforeshow event fired");
+	//$(this).find('ul').listview('refresh');
+	$("#promolist").listview().listview("refresh");
 });
+
+$(document).on( "pageshow", "#one", function( event ) {
+	console.log("Pageshow event fired!");
+	$('#promolist li').removeClass("ui-li-static");
+	//$("#promolist").listview().listview("refresh");
+ });
+/*****************FIN EVENTOS DE PAGE*******************/
 
 //jQuery(document).ready(function(){
 function onDeviceReady(){
