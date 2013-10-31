@@ -76,7 +76,11 @@ body{ font-size: .5em; }
 
 .det-comercio-row{
 	background-color: #FFFFFF;
-	padding: 5px 5px 1px 5px;
+	padding: 5px;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #CCCCCC;
+	min-height: 50px;
 }
 
 .det-img-comercio{
@@ -100,7 +104,7 @@ body{ font-size: .5em; }
     white-space:pre-wrap;
     font-size: 1.7em;
     font-family: Tahoma, Geneva, sans-serif;
-    text-shadow: 0 0 1px #FF6A15;
+    text-shadow: 0 0 1px #FFFFFF;
     width: 100%; 
     padding: 0.15em	
 }
@@ -109,12 +113,17 @@ body{ font-size: .5em; }
     /*font-size: 0.7em;*/
     color: #2F3E46;
     width: 100%;
+    border-collapse: collapse;
+}
+table.aviso tr:hover td{
+    /*font-size: 0.7em;*/
+    background-color: #DDDDDD;
 }
 
 .descripcion{
 	min-height: 28px;
 	margin: auto;
-	background-color: #FFFFFF;
+	background-color: inherit;
     font-size: 1.1em;
     /*padding-left: 4px;*/
     width:98%;
@@ -135,6 +144,7 @@ body{ font-size: .5em; }
     color: #42962F;
     font-weight: bolder;
     padding-left: 4px;
+    padding-bottom: 3px;
     text-align: center;
     vertical-align: middle;
     white-space:pre-wrap;
@@ -1134,9 +1144,8 @@ ul li:nth-child(even) { background-color:#fff; }
 	text-align: center;
 	color: #FF6A15 /*{a-bar-color}*/;
 	text-shadow: 0 0 1px #FF6A15;
-	font-size: 1.3em;
+	font-size: 1.7em;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
-	font-weight: bold;
 	background-image: -webkit-gradient(linear, left top, left bottom, from( #0A0A0A /*{a-bar-background-start}*/), to( #3D3D3D /*{a-bar-background-end}*/)); /* Saf4+, Chrome */
 	background-image: -webkit-linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #3D3D3D /*{a-bar-background-end}*/); /* Chrome 10+, Saf5.1+ */
 	background-image:    -moz-linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #3D3D3D /*{a-bar-background-end}*/); /* FF3.6 */
@@ -1154,3 +1163,19 @@ ul li:nth-child(even) { background-color:#fff; }
 	background-image:         linear-gradient( #0A0A0A /*{a-bar-background-start}*/, #626262 /*{a-bar-background-end}*/);
 }
 /*END******************LAZYLOADING PROMOLIST*/
+
+/*DIV TABLES*/
+.div-table{
+  display:table;         
+  width:auto;         
+  border:0;         
+}
+.div-table-row{
+  display:table-row;
+  width:auto;
+  clear:both;
+}
+.div-table-col{
+  float:left;/*fix for  buggy browsers*/
+  display:table-column;         
+}

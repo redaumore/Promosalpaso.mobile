@@ -154,6 +154,7 @@ function loadPromoList(page){
                 		jQuery('#promolist').append(getLastItem(page+1)).listview('refresh');
                 	else
                 		jQuery('#promolist').listview('refresh');
+                	jQuery('#promolist li').removeClass("ui-li-static");
                 }
                 
                 
@@ -445,7 +446,7 @@ var liString = new String();
 	liString += '               <table class="aviso">';
 	liString += '                  <tr>';
 	liString += '                     <td class="lst-image">';
-	liString += '                        <img src="#IMAGE#" class="shadow image">';
+	liString += '                        <img src="#IMAGE#" class="shadow image" style="margin-left: 2px;"/>';
 	liString += '                     </td>';
 	liString += '                     <td style="border-right: solid 1px #9CAAC6;">';
 	liString += '                        <p class="ui-li-desc comercio">#COMERCIO#</p>';
@@ -472,7 +473,7 @@ function getLastItem( nextPage){
 	liString = '<li class="li-promoitem">';
 	//liString += '   <div class="ui-btn-inner ui-li ui-li-static ui-btn-up-a" style="padding: 0px;">';
 	liString += '       <div class="ui-btn-text registro">';
-	liString += '           <a href="#" data-transition="slide" onclick="loadPromoList('+nextPage+');"><div class="get-more"><i class="icon-plus-sign "/> Traer m\u00e1s <i class="icon-plus-sign "/></div>'; //<a href="#ID#">';
+	liString += '           <a href="#" data-transition="slide" onclick="loadPromoList('+nextPage+');"><div class="get-more">Traer m\u00e1s Promos</div>'; //<a href="#ID#">';
 	liString += '            </a></div></li>';
 
     return liString;
