@@ -6,10 +6,10 @@ var zoom;
 var global = {};
 	
 function initGmapApi (){
-	console.log("initGmapApi: Google API Loaded");
+	consolelog("initGmapApi: Google API Loaded");
 	directionsService = new google.maps.DirectionsService();
 	if(directionsService == null)
-		console.log("initGmapApi: Direction Service not loaded");
+		consolelog("initGmapApi: Direction Service not loaded");
 };
 
 function initializemap() {

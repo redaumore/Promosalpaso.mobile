@@ -25,13 +25,13 @@ function onDeviceReady(){
         _last_update = window.localStorage.getItem("last_update");    
         if(_last_update == null)
             setLastUpdate(new Date(0));
-        console.log("Ultima actualización: "+_last_update);    
-        console.log("Actualizando ciudades...");
+        consolelog("Ultima actualización: "+_last_update);    
+        consolelog("Actualizando ciudades...");
         jQuery.mobile.showPageLoadingMsg('a', "Buscando tu localización...", false);
         getRegionsUpdate();
-        console.log("Geolocalizando...");
+        consolelog("Geolocalizando...");
         getGeoLocation();
-        console.log("Trayendo categorias...");
+        consolelog("Trayendo categorias...");
         getCategories(false);
         jQuery('#promolist').listview();
  }
@@ -82,7 +82,12 @@ jQuery(document).on("click",'.go-back', function() {
 
 jQuery(document).on("click",'.go-main', function() {
     event.preventDefault();
-    $.mobile.changePage(jQuery("#main"));
+    if(environment == "DEV"){
+    	$.mobile.changePage(jQuery("#consolelog"));
+    }
+    else{
+    	$.mobile.changePage(jQuery("#main"));
+    }
 });
 
 function getCategories(fromCategories){
@@ -103,7 +108,7 @@ function getCategories(fromCategories){
         contentType: "application/json; charset=utf-8",
         timeout: 10000,
         beforeSend: function (jqXHR, settings) {
-            console.log(settings.url);
+            consolelog(settings.url);
         },
         success: function(data, status){
         	if(data.length != undefined){
@@ -113,18 +118,18 @@ function getCategories(fromCategories){
         			jQuery("#cat").val(jsondata);
         		}
         		else
-        			console.log("Servicio de categorias trajo array vacio.");
+        			consolelog("Servicio de categorias trajo array vacio.");
         		loadCategories();
         	}
         	else{
-        		console.log(data.code + ": " + data.message);
+        		consolelog(data.code + ": " + data.message);
         		window.localStorage.removeItem("categories");
         		jQuery("#cat").val("");
         	}
-        	console.log(JSON.stringify(data));
+        	consolelog(JSON.stringify(data));
         },
         error: function(jqXHR, textStatus, errorThrown){
-        	console.log("Error recuperando las categorias.");
+        	consolelog("Error recuperando las categorias.");
         }
     });
 }
@@ -237,7 +242,7 @@ function saveSelectedCategories(){
 
 /*WATCH POSITION*/
 function startWatchPosition() {
-	console.log("startWatchPosition()");
+	consolelog("startWatchPosition()");
     // Throw an error if no update is received every 30 seconds
     var options = { timeout: 30000 };
     watchID = navigator.geolocation.watchPosition(onSuccessWatchPosition, onErrorWatchPosition, options);
@@ -246,22 +251,23 @@ function startWatchPosition() {
 // onSuccess Geolocation
 //
 function onSuccessWatchPosition(position) {
-	console.log("onSuccessWatchPosition()");
+	consolelog("onSuccessWatchPosition()");
 	if(jQuery.mobile.activePage.selector =! "#one"){
 		navigator.geolocation.clearWatch(watchID);
-		console.log("Stop watching");
+		consolelog("Stop watching");
 		return;
 	}
-		
-	console.log("latitude:"+position.coords.latitude+" longitude:"+position.coords.longitude);
-    if(getDistance(jQuery("#lat").val(),jQuery("#lng").val(), 
-    				position.coords.latitude, position.coords.longitude) > 100){
+	var distance = getDistance(jQuery("#_lat").val(),jQuery("#_lng").val(), position.coords.latitude, position.coords.longitude);	
+	consolelog("latitude:"+position.coords.latitude+" longitude:"+position.coords.longitude);
+	consolelog("distance:"+distance);
+    if(distance > 100){
     	_lat = position.coords.latitude;
     	_lng = position.coords.longitude;
-    	jQuery("#lat").val(_lat);
-    	jQuery("#lng").val(_lng);
-    	console.log("onSuccessWatchPosition: distance>100");
-    	loadPromoList();
+    	jQuery("#_lat").val(_lat);
+    	jQuery("#_lng").val(_lng);
+    	consolelog("onSuccessWatchPosition: distance>100");
+    	//jQuery("#promolist").empty();
+    	loadPromoList(0);
     }
 	 
 }
@@ -269,7 +275,7 @@ function onSuccessWatchPosition(position) {
 // onError Callback receives a PositionError object
 //
 function onErrorWatchPosition(error) {
-    console.log('onErrorWatchPosition. code: '    + error.code    + '\n' +
+    consolelog('onErrorWatchPosition. code: '    + error.code    + '\n' +
           'message: ' + error.message + '\n');
     navigator.geolocation.clearWatch(watchID);
 }

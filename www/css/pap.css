@@ -28,9 +28,12 @@ body{ font-size: .5em; }
 /*FIN CATEGORIAS*/
 
 .li-promoitem{
-	padding: 0px; 
-	border-bottom: 1px;
-	border-color: #666666;
+	padding: 0px;
+	border-top: none;
+	border-left: none;
+	border-right: none; 
+	border-bottom: #666666 solid 1px;
+	background-color: #FFFFFF;
 }
 .li-promoitem:hover{
 	background-color: #EEEEEE; 
@@ -194,6 +197,7 @@ table.aviso tr:hover td{
     vertical-align: middle;
     top: 0;
     width: 40px;
+    text-shadow: none;
     /*position: absolute;*/
 }
 
@@ -1111,8 +1115,8 @@ span>sup{
   background-position: -456px -144px;
 }
 
-/*ul li:nth-child(odd) { background-color:#eee; }*/
-ul li:nth-child(even) { background-color:#fff; }
+/*ul li:nth-child(odd) { background-color:#ffff; }
+ul li:nth-child(even) { background-color:#fff; }*/
 
 /***********************LAZYLOADING PROMOLIST*/
 .width-hundred-percent {

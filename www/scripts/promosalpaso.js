@@ -16,6 +16,7 @@ var _inFavorites = false;
 var _last_update;
 var _searchOrigin = "GPS"; /*CITY, FAV*/
 var _current_page = -1;
+var _txt_consolelog = "";
 
 document.addEventListener("deviceready", function(){
 	console.log("calling onDeviceReady");
@@ -29,7 +30,7 @@ function refreshPromoList(){
 			/*SAN JUSTO*/
 			_lat = "-34.682919"; 
 			_lng = "-58.572397";
-			console.log("refreshPromoList: SAN JUSTO");
+			consolelog("refreshPromoList: SAN JUSTO");
 		}
 		else{
 			showMessage('No se puede obtener tu localizaciÃ³n. Intenta nuestra bÃºsqueda por ciudad.', 'Info', 'Ok');
@@ -46,16 +47,16 @@ function onSuccessPromoList(position) {
 	if(position.coords.accuracy <= 150){
 		_lat = position.coords.latitude;
 		_lng = position.coords.longitude;
-		jQuery("#lat").val(_lat);
-		jQuery("#lng").val(_lng);
-		console.log("Geoposition: "+_lat+", "+_lng+" +/- "+position.coords.accuracy);
+		jQuery("#_lat").val(_lat);
+		jQuery("#_lng").val(_lng);
+		consolelog("Geoposition: "+_lat+", "+_lng+" +/- "+position.coords.accuracy);
 		loadPromoList(0);
 	}
 	else{
 		if(environment == "DEV")
-			loadPromoList();
+			loadPromoList(0);
 		else{
-			console.log("Accuracy: "+position.coords.accuracy);
+			consolelog("Accuracy: "+position.coords.accuracy);
 			onError("");
 		}
 	}
@@ -65,20 +66,20 @@ function onSuccessPromoList(position) {
 function getGeoLocation(){
 	navigator.geolocation.getCurrentPosition(onSuccess, 
 	        onError, 
-	        {maximumAge:3000, timeout:6000, enableHighAccuracy: true});
+	        {maximumAge:3000, timeout:10000, enableHighAccuracy: true});
 }
 
 function onSuccess(position){
 	if(position.coords.accuracy <= 150){
 		_lat = position.coords.latitude;
 		_lng = position.coords.longitude;
-		jQuery("#lat").val(_lat);
-		jQuery("#lng").val(_lng);
-		console.log("Geoposition: "+_lat+", "+_lng+" +/- "+position.coords.accuracy);
+		jQuery("#_lat").val(_lat);
+		jQuery("#_lng").val(_lng);
+		consolelog("Geoposition: "+_lat+", "+_lng+" +/- "+position.coords.accuracy);
 		jQuery.mobile.hidePageLoadingMsg();
 	}
 	else{
-		console.log("Accuracy: "+position.coords.accuracy);
+		consolelog("Accuracy: "+position.coords.accuracy);
 		onError("");
 	}
 	
@@ -90,9 +91,9 @@ function onError(error) {
 		/*SAN JUSTO*/
 		_lat = "-34.682919"; 
 		_lng = "-58.572397";
-		jQuery("#lat").val(_lat);
-		jQuery("#lng").val(_lng);
-		console.log("onError: SAN JUSTO");
+		jQuery("#_lat").val(_lat);
+		jQuery("#_lng").val(_lng);
+		consolelog("onError: SAN JUSTO");
 	//	loadPromoList();
 	}
 	else{
@@ -114,7 +115,7 @@ function loadPromoList(page){
         contentType: "application/json; charset=utf-8",
         timeout: 10000,
         beforeSend: function (jqXHR, settings) {
-            console.log(settings.url);
+            consolelog(settings.url);
         },
         success: function(data, status){
                 console.log("loadPromoList: llamada a servicio exitosa. data.length:"+data.data.length);
@@ -188,7 +189,7 @@ function loadPromoListByIds(ids, fromFavoritos){
         contentType: "application/json; charset=utf-8",
         timeout: 10000,
         beforeSend: function (jqXHR, settings) {
-            console.log("Favoritas: "+ settings.url + "?" + settings.data);
+            consolelog("Favoritas: "+ settings.url + "?" + settings.data);
         },
         success: function(data, status){
                 if(data.length != 0){
@@ -235,7 +236,7 @@ function getPromoRecord(promo){
     liString = liString.replace("#DESCRIPCION#", promo.short_description);        
     liString = liString.replace("#PROMO#", promo.displayed_text);
     liString = liString.replace("#PRECIO_DESDE#", (promo.value_since != null)?"inline":"none");
-    liString = liString.replace("#PRECIO#", (promo.is_percentage != null)?formatPercentage(promo.promo_value):formatPrice(promo.promo_value));
+    liString = liString.replace("#PRECIO#", (promo.is_percentage == "1")?formatPercentageItem(promo.promo_value):formatPriceItem(promo.promo_value));
     if(_searchOrigin == "GPS")
     	liString = liString.replace("#DISTANCIA#", promo.distance);
     return liString;
@@ -293,7 +294,15 @@ function loadPromoDetail(item){
     jQuery("#det-long_description").html(item.long_description);
     jQuery("#det-displayed_text").html(item.displayed_text);
     jQuery("#det-short_description").html(item.short_description);
-    jQuery("#det-promo_value").html(formatPrice(item.promo_value));
+    if(item.is_percentage == "0"){
+    	jQuery("#det-promo_value").html(formatPrice(item.promo_value));
+    	jQuery("#det-promo_value").removeClass("porcentaje").addClass("precio");
+    }
+    else{
+    	jQuery("#det-promo_value").html(formatPercentage(item.promo_value));
+    	jQuery("#det-promo_value").removeClass("precio").addClass("porcentaje");
+    }
+    
     jQuery("#det-distance").html(item.distance);
     jQuery("#det-direccion").html(item.street + ' ' + item.number + ' - ' + item.city);
     jQuery("#det-img-comercio").attr("src",item.logo);
@@ -456,7 +465,7 @@ var liString = new String();
 	liString += '                     <td style="width: 45px;">';
 	liString += '                        <div style="text-align: center;">';
 	liString += '                            <div class="desde" style="display: #PRECIO_DESDE#;">desde</div>';
-	liString += '                            <div><span class="precio">#PRECIO#</span></div>';
+	liString += '                            #PRECIO#';
 	if(_searchOrigin == "GPS")
 		liString += '                            <div style="border-top: solid 1px #9CAAC6; vertical-align: middle; text-align: center"><span class="distancia det-font-oscuro">#DISTANCIA#</span></div>';
 	liString += '                        </div>';
@@ -492,6 +501,10 @@ function formatPrice(price){
     return formatedPrice;
 }
 
+function formatPriceItem(price){
+	return '<div id="item-promo_value" class="precio">'+formatPrice(price)+"</div>";
+}
+
 function formatPercentage(value){
     var formatedPrice = "";
     if(value.indexOf(".") == -1)
@@ -505,12 +518,16 @@ function formatPercentage(value){
     return formatedPrice;
 }
 
+function formatPercentageItem(value){
+	return '<div id="item-promo_value" class="porcentaje">'+formatPercentage(value)+"</div>";
+}
+
 
 
 //CONFIG
 function getRegionsUpdate(){
 	$.mobile.showPageLoadingMsg('a', "Cargando...", false);
-    console.log("getRegionsUpdate-last_update: " + _last_update);
+    consolelog("getRegionsUpdate-last_update: " + _last_update);
     $.ajax({
         url: _baseServUri + 'getregions',
         dataType: 'jsonp',
@@ -548,7 +565,7 @@ function populateRegionsDB(tx, provinces, cities) {
     if(provinces != null ){
          tx.executeSql('CREATE TABLE IF NOT EXISTS province (province_id INTEGER PRIMARY KEY, name, updated DATETIME)');
          $.each(provinces, function(i,item){
-            console.log("populateRegionsDB: actualizando provincia "+item.name);
+            consolelog("populateRegionsDB: actualizando provincia "+item.name);
             tx.executeSql('INSERT INTO province (province_id, name, updated) VALUES ('+item.province_id+',"'+item.name+'","'+item.updated+'")');
          });
      }
@@ -562,7 +579,7 @@ function populateRegionsDB(tx, provinces, cities) {
      }
 }
 function errorCB(err) {
-    console.log("errorCB: "+err.message+". Code: "+err.code);
+    consolelog("errorCB: "+err.message+". Code: "+err.code);
     //alert("Error actualizando ciudades: "+err.code);
 }
 function successCB(){
@@ -582,7 +599,7 @@ function successProvinceDDL(){
     
 }
 function errorProvinceDDL(err) {
-        console.log("errorProvinceDDL: "+err.message+". Code: "+err.code);
+        consolelog("errorProvinceDDL: "+err.message+". Code: "+err.code);
     }
 function queryProvinceSuccess(tx, results){
     jQuery('#state_select').empty();
@@ -604,7 +621,7 @@ function successCityDDL(){
     
 }
 function errorCityDDL(err) {
-        console.log("Error City SQL: "+err.code);
+        consolelog("Error City SQL: "+err.code);
     }
 function queryCitySuccess(tx, results){
     jQuery('#city_select').empty();
@@ -638,12 +655,12 @@ function querySearchSuccess(tx, results) {
     	$.mobile.showPageLoadingMsg('a', "Buscando promos...", false);
         _lat = results.rows.item(0).latitude;
         _lng = results.rows.item(0).longitude;
-        console.log("Geoposition search: "+results.rows.item(0).name+" "+_lat+", "+_lng);
+        consolelog("Geoposition search: "+results.rows.item(0).name+" "+_lat+", "+_lng);
         loadPromoList(0);
     }
 }
 function errorSearchDB(err){
-    console.log("error en la búsqueda de promociones por ciudad: " + err.code);
+    consolelog("error en la búsqueda de promociones por ciudad: " + err.code);
 }
 
 function showPromoImage(){
@@ -701,7 +718,7 @@ function sendMessage(){
         contentType: "application/json; charset=utf-8",
         timeout: 10000,
         beforeSend: function (jqXHR, settings) {
-            console.log(settings.url);
+            consolelog(settings.url);
         },
         success: function(data, status){
         	jQuery.mobile.hidePageLoadingMsg();
@@ -732,7 +749,7 @@ function retrieveResponses(){
         contentType: "application/json; charset=utf-8",
         timeout: 10000,
         beforeSend: function (jqXHR, settings) {
-            console.log(settings.url);
+            consolelog(settings.url);
         },
         success: function(data, status){
         	jQuery.mobile.hidePageLoadingMsg();
@@ -749,6 +766,20 @@ function retrieveResponses(){
 function gotoContact(){
 	//retrieveResponses();
 	$.mobile.changePage(jQuery("#contact"));
+}
+
+function consolelog(message){
+	if(environment == "DEV"){
+		$("#txt_consolelog").prepend(message + "<br/><br/>");
+		len=$("#txt_consolelog").text().length;
+	    if(len>1000)
+	    {
+	      $("#txt_consolelog").text($("#txt_consolelog").text().substr(0,1000)+'...');
+	    }
+	}
+	else{
+		console.log(message);
+	}
 }
 
 
