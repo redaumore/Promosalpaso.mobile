@@ -1,25 +1,32 @@
 
 var directionDisplay;
-var directionsService = new google.maps.DirectionsService();
+var directionsService; /* = new google.maps.DirectionsService();*/
 var map;
 var zoom;
+var global = {};
+	
+function initGmapApi (){
+	consolelog("initGmapApi: Google API Loaded");
+	directionsService = new google.maps.DirectionsService();
+	if(directionsService == null)
+		consolelog("initGmapApi: Direction Service not loaded");
+};
 
-  function initializemap() {
+function initializemap() {
 	  		var mapOptions;
-	  		var start = new google.maps.LatLng(_lat, _lng);
-			var end = new google.maps.LatLng(_promo_lat, _promo_lng);
+	  		var end = new google.maps.LatLng(_promo_lat, _promo_lng);
 	  		mapOptions= {
 						center: end,
 						zoom: 16,
 						mapTypeId: google.maps.MapTypeId.ROADMAP,
 						streetViewControl: false,
 						mapTypeControl: false,
-			 }
+			 };
 				
 			map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 			
-			var marker = new google.maps.Marker({
-				icon: "http://dev.promosalpaso.com/images/pap_location.png",
+			new google.maps.Marker({
+				icon: _baseUri + "images/pap_location.png",
 		        position: end,
 		        map: map,
 		    });
@@ -33,14 +40,14 @@ var zoom;
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				streetViewControl: false,
 				mapTypeControl: false,
-		}
+		};
 		
 		map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);	
 		
 		 var rendererOptions = {
 				  map: map,
 				  suppressMarkers : true
-		}
+		};
 		 
 		directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);// also, constructor can get "DirectionsRendererOptions" object
 		directionsDisplay.setMap(map); // map should be already initialized.
@@ -50,22 +57,23 @@ var zoom;
 			    destination:end,
 			    travelMode: google.maps.TravelMode.WALKING
 		};
-		
+		if(directionsService == null)
+			directionsService = new google.maps.DirectionsService();
 		directionsService.route(request, function(response, status) {
 	        if (status == google.maps.DirectionsStatus.OK) {
 	            directionsDisplay.setDirections(response);
 	        }
 	    });
 		
-		var marker_end = new google.maps.Marker({
-			icon: "http://dev.promosalpaso.com/images/pap_location.png",
+		new google.maps.Marker({
+			icon: _baseUri + "images/pap_location.png",
 	        position: end,
 	        map: map,
 	    });
 		
-		var marker_start = new google.maps.Marker({
+		new google.maps.Marker({
 			position: start,
-			icon: "http://dev.promosalpaso.com/images/pap_smile.png",
+			icon: _baseUri + "images/pap_smile.png",
 	        map: map,
 	    });
 }
@@ -102,21 +110,19 @@ var zoom;
   
   
   function calcRoute() {
-	  		var request;
+	  		var request = "";
 	  		var start = new google.maps.LatLng(_lat, _lng);
 			var end = new google.maps.LatLng(_promo_lat, _promo_lng);
 			if(_searchOrigin == "GPS"){
-				
-				
-				var marker = new google.maps.Marker({
+				new google.maps.Marker({
 					position: start,
-					icon: "http://dev.promosalpaso.com/images/pap_smile.png",
+					icon: _baseUri + "images/pap_smile.png",
 			        map: map,
 			    });
 			}
 			
-			var marker = new google.maps.Marker({
-				icon: "http://dev.promosalpaso.com/images/pap_location.png",
+			new google.maps.Marker({
+				icon: _baseUri + "images/pap_location.png",
 		        center: end,
 		        map: map,
 		    });
@@ -126,19 +132,8 @@ var zoom;
 					directionDisplay.setDirections(response);
 				}
 	       });
+		   marker = null;
 			
   }  
-	/*ESTO NUNCA SIRVIO. MIRAR    
-	//  Make an array of the LatLng's of the markers you want to show
-    var LatLngList = new Array (start, end);
-    //  Create a new viewpoint bound
-    var bounds = new google.maps.LatLngBounds ();
-    //  Go through each...
-    for (var i = 0, LtLgLen = LatLngList.length; i < LtLgLen; i++) {
-      //  And increase the bounds to take this point
-      bounds.extend (LatLngList[i]);
-    }
-    //  Fit these bounds to the map
-    map.setCenter(bounds.getCenter());
-    map.fitBounds(bounds);*/
+
   

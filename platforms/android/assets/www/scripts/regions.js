@@ -1,7 +1,7 @@
 function loadCities()
 {
         var selectedValue = document.getElementById('province').options[document.getElementById('province').selectedIndex].value;
-        var myAjax = new Ajax.Request(
+        Ajax.Request(
         "<?=$this->url(array('controller'=>'BackendAjax','action'=>'getCities'))?>",
             {
                 method:'post',
