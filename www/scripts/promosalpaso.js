@@ -19,13 +19,33 @@ var _current_page = -1;
 var _txt_consolelog = "";
 
 document.addEventListener("deviceready", function(){
+<<<<<<< HEAD
 	consolelog("calling onDeviceReady");
+=======
+	console.log("calling onDeviceReady");
+>>>>>>> 17ea10ac3a7cf81516d36a443900b1cba36b9910
 	onDeviceReady();
 },true);
 
 function refreshPromoList(){
 	_searchOrigin = "GPS";
+<<<<<<< HEAD
 	showMessage("Buscando promos...");
+=======
+	if(_lat == null || _lng == null){
+		if(environment == "DEV" ){
+			/*SAN JUSTO*/
+			_lat = "-34.682919"; 
+			_lng = "-58.572397";
+			consolelog("refreshPromoList: SAN JUSTO");
+		}
+		else{
+			showMessage('No se puede obtener tu localización. Intenta nuestra búsqueda por ciudad.', 'Info', 'Ok');
+			return;
+		}
+	}
+	jQuery.mobile.showPageLoadingMsg('a', "Buscando promos...", false);
+>>>>>>> 17ea10ac3a7cf81516d36a443900b1cba36b9910
 	navigator.geolocation.getCurrentPosition(onSuccessPromoList, 
 	        onError, 
 	        {maximumAge:3000, timeout:6000, enableHighAccuracy: true});
@@ -64,19 +84,38 @@ function onSuccess(position){
 		jQuery("#_lat").val(_lat);
 		jQuery("#_lng").val(_lng);
 		consolelog("Geoposition: "+_lat+", "+_lng+" +/- "+position.coords.accuracy);
+<<<<<<< HEAD
 		hideMessage();
 	}
 	else{
 		consolelog("getGeoLocation -> LOW ACCURACY: "+position.coords.accuracy);
+=======
+		jQuery.mobile.hidePageLoadingMsg();
+	}
+	else{
+		consolelog("Accuracy: "+position.coords.accuracy);
+>>>>>>> 17ea10ac3a7cf81516d36a443900b1cba36b9910
 		onError("");
 	}
 	
 }
 //onError Callback receives a PositionError object
 function onError(error) {
+<<<<<<< HEAD
 	hideMessage();
 	if(error.code === undefined){
 		showMessage('La informaci�n del GPS tiene baja precisión. Te sugerimos buscar por ciudad.', 3500);
+=======
+	jQuery.mobile.hidePageLoadingMsg();
+	if(environment == "DEV" ){
+		/*SAN JUSTO*/
+		_lat = "-34.682919"; 
+		_lng = "-58.572397";
+		jQuery("#_lat").val(_lat);
+		jQuery("#_lng").val(_lng);
+		consolelog("onError: SAN JUSTO");
+	//	loadPromoList();
+>>>>>>> 17ea10ac3a7cf81516d36a443900b1cba36b9910
 	}
 	else{
 		if(error.code === "PERMISSION_DENIED")
@@ -109,7 +148,11 @@ function loadPromoList(page){
                 console.log("loadPromoList: llamada a servicio exitosa. data.length:"+data.data.length);
                 window.localStorage.setItem("lastSearch", JSON.stringify(data));
                 if(data.data.length == 0){
+<<<<<<< HEAD
                 	hideMessage();
+=======
+                	jQuery.mobile.hidePageLoadingMsg();
+>>>>>>> 17ea10ac3a7cf81516d36a443900b1cba36b9910
                     if(jQuery.mobile.activePage[0].id == "main"){
                         showMessage('No se encontraron promos. Intenta nuestra búsqueda manual.', 3500);
                         event.preventDefault();
@@ -129,7 +172,11 @@ function loadPromoList(page){
                     promolist += getPromoRecord(item);
                 });
                 if(page == 0){
+<<<<<<< HEAD
                 	jQuery("#promolist").empty().html(promolist).trigger("create");
+=======
+                	jQuery("#promolist").html(promolist).trigger("create");;
+>>>>>>> 17ea10ac3a7cf81516d36a443900b1cba36b9910
                 	count_promolist = jQuery('#promolist li').size();
                 	if(total > count_promolist)
                 		jQuery('#promolist').append(getLastItem(page+1));
@@ -145,6 +192,11 @@ function loadPromoList(page){
                 		jQuery('#promolist').listview('refresh');
                 	jQuery('#promolist li').removeClass("ui-li-static");
                 }
+<<<<<<< HEAD
+=======
+                
+                
+>>>>>>> 17ea10ac3a7cf81516d36a443900b1cba36b9910
         },
         error: function(jqXHR, textStatus, errorThrown){
         	if(jqXHR.responseText != null)
@@ -509,7 +561,12 @@ function formatPercentageItem(value){
 
 //CONFIG
 function getRegionsUpdate(){
+<<<<<<< HEAD
 	consolelog("getRegionsUpdate-last_update: " + _last_update);
+=======
+	$.mobile.showPageLoadingMsg('a', "Cargando...", false);
+    consolelog("getRegionsUpdate-last_update: " + _last_update);
+>>>>>>> 17ea10ac3a7cf81516d36a443900b1cba36b9910
     $.ajax({
         url: _baseServUri + 'getregions',
         dataType: 'jsonp',
