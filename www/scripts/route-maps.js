@@ -1,14 +1,10 @@
-
+﻿
 var directionDisplay;
 var directionsService; /* = new google.maps.DirectionsService();*/
 var map;
 var zoom;
 var global = {};
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> 17ea10ac3a7cf81516d36a443900b1cba36b9910
 function initGmapApi (){
 	consolelog("initGmapApi: Google API Loaded");
 	directionsService = new google.maps.DirectionsService();

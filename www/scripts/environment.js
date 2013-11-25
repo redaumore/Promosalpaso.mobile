@@ -1,11 +1,8 @@
-    //var _baseUri = "http://192.168.1.34/";
+﻿    //var _baseUri = "http://192.168.1.34/";
 //var _baseUri = "http://dev.promosalpaso.com/";
 var _baseUri = "http://promosalpaso.local/";
 var environment = "DEV";
-<<<<<<< HEAD
-=======
 var _pagesize = 7;
->>>>>>> 17ea10ac3a7cf81516d36a443900b1cba36b9910
 
 /*SAN JUSTO*/
 //var _lat = "-34.681774410598"; //"-34.6463";

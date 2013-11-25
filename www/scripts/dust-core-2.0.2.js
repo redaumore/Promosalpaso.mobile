@@ -1,4 +1,4 @@
-//
+﻿//
 // Dust - Asynchronous Templating v2.0.2
 // http://akdubya.github.com/dustjs
 //

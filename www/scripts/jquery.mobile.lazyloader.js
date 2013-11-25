@@ -1,4 +1,4 @@
-( function( $, undefined ) {
+﻿( function( $, undefined ) {
 
     $.widget( "mobile.lazyloader", $.mobile.widget, {
 

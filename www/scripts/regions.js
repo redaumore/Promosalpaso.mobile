@@ -1,4 +1,4 @@
-function loadCities()
+﻿function loadCities()
 {
         var selectedValue = document.getElementById('province').options[document.getElementById('province').selectedIndex].value;
         Ajax.Request(
